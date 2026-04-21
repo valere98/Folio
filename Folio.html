@@ -1,0 +1,1344 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+<title>Sophia Nderi — Web & Brand Designer</title>
+<link rel="preconnect" href="https://fonts.googleapis.com"/>
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin/>
+<link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,300;0,400;0,500;0,600;1,300;1,400&family=DM+Sans:wght@300;400;500&display=swap" rel="stylesheet"/>
+<style>
+  *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+  :root {
+    --white:       #FFFFFF;
+    --sage-deep:   #0d2b1a;
+    --sage-mid:    #526c53;
+    --sage-light:  #EBF0EB;
+    --sage-tint:   #F3F6F3;
+    --gold:        #a58052;
+    --gold-light:  #F5EDE0;
+    --ink:         #000000;
+    --ink-soft:    #3d3d3b;
+    --ink-muted:   #7A7A74;
+    --border:      #DDE3DD;
+    --serif:       'Cormorant Garamond', Georgia, serif;
+    --sans:        'DM Sans', sans-serif;
+  }
+
+  html { scroll-behavior: smooth; }
+
+  body {
+    font-family: var(--sans);
+    background: var(--white);
+    color: var(--ink);
+    line-height: 1.6;
+    overflow-x: hidden;
+  }
+
+  /* ── NAV ── */
+  nav {
+    position: fixed;
+    top: 0; left: 0; right: 0;
+    z-index: 100;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    padding: 1.2rem 5%;
+    background: white;
+    backdrop-filter: blur(12px);
+    border-bottom: 1px solid var(--border);
+  }
+
+  .nav-logo {
+    font-family: var(--serif);
+    font-size: 1.35rem;
+    font-weight: 500;
+    color: var(--sage-deep);
+    letter-spacing: 0.01em;
+    text-decoration: none;
+  }
+
+  .nav-links {
+    display: flex;
+    gap: 2.2rem;
+    list-style: none;
+  }
+
+  .nav-links a {
+    text-decoration: none;
+    font-size: 0.83rem;
+    font-weight: 400;
+    color: var(--ink-soft);
+    letter-spacing: 0.06em;
+    text-transform: uppercase;
+    transition: color 0.25s;
+  }
+
+  .nav-links a:hover { color: var(--sage-deep); }
+
+  .nav-cta {
+    background: var(--sage-deep) !important;
+    color: var(--white) !important;
+    padding: 0.5rem 1.3rem;
+    border-radius: 100px;
+    font-size: 0.8rem !important;
+    transition: background 0.25s !important;
+  }
+  .nav-cta:hover { background: var(--sage-mid) !important; }
+
+  /* ── HERO ── */
+  .hero {
+    min-height: 100vh;
+    display: flex;
+    align-items: center;
+    padding: 8rem 5% 5rem;
+    position: relative;
+    overflow: hidden;
+  }
+
+  .hero::before {
+    content: '';
+    position: absolute;
+    inset: 0;
+    background: radial-gradient(ellipse 70% 60% at 80% 50%, var(--sage-tint) 0%, transparent 70%);
+    pointer-events: none;
+  }
+
+  .hero-dot-grid {
+    position: absolute;
+    right: 0; top: 0;
+    width: 48%;
+    height: 100%;
+    background-image: radial-gradient(circle, var(--border) 1px, transparent 1px);
+    background-size: 28px 28px;
+    opacity: 0.55;
+    pointer-events: none;
+  }
+
+  .hero-inner {
+    max-width: 680px;
+    position: relative;
+    z-index: 2;
+  }
+
+  .hero-eyebrow {
+    display: inline-flex;
+    align-items: center;
+    gap: 0.6rem;
+    font-size: 0.78rem;
+    font-weight: 500;
+    letter-spacing: 0.12em;
+    text-transform: uppercase;
+    color: var(--gold);
+    margin-bottom: 1.6rem;
+  }
+
+  .hero-eyebrow::before {
+    content: '';
+    display: block;
+    width: 28px; height: 1px;
+    background: var(--gold);
+  }
+
+  .hero h1 {
+    font-family: var(--serif);
+    font-size: clamp(3rem, 6vw, 5.2rem);
+    font-weight: 300;
+    line-height: 1.1;
+    color: var(--ink);
+    margin-bottom: 1.6rem;
+  }
+
+  .hero h1 em {
+    font-style: italic;
+    color: var(--sage-deep);
+  }
+
+  .hero-sub {
+    font-size: 1.05rem;
+    color: var(--ink-soft);
+    max-width: 480px;
+    line-height: 1.75;
+    margin-bottom: 2.6rem;
+    font-weight: 300;
+  }
+
+  .hero-actions {
+    display: flex;
+    align-items: center;
+    gap: 1.4rem;
+    flex-wrap: wrap;
+  }
+
+  .btn-primary {
+    background: var(--sage-deep);
+    color: var(--white);
+    padding: 0.9rem 2rem;
+    border-radius: 100px;
+    text-decoration: none;
+    font-size: 0.88rem;
+    font-weight: 500;
+    letter-spacing: 0.03em;
+    transition: background 0.25s, transform 0.2s;
+  }
+  .btn-primary:hover { background: var(--sage-mid); transform: translateY(-1px); }
+
+  .btn-ghost {
+    color: var(--ink-soft);
+    text-decoration: none;
+    font-size: 0.88rem;
+    font-weight: 400;
+    display: flex;
+    align-items: center;
+    gap: 0.4rem;
+    transition: color 0.25s;
+  }
+  .btn-ghost:hover { color: var(--sage-deep); }
+  .btn-ghost::after { content: '→'; }
+
+  /* ── TRUST BAR ── */
+  .trust-bar {
+    background: var(--sage-light);
+    padding: 1.4rem 5%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 3.5rem;
+    flex-wrap: wrap;
+    border-top: 1px solid var(--border);
+    border-bottom: 1px solid var(--border);
+  }
+
+  .trust-item {
+    display: flex;
+    align-items: center;
+    gap: 0.6rem;
+    font-size: 0.82rem;
+    color: var(--ink-soft);
+    font-weight: 400;
+  }
+
+  .trust-dot {
+    width: 7px; height: 7px;
+    border-radius: 50%;
+    background: var(--sage-deep);
+  }
+
+  /* ── SECTION BASE ── */
+  section { padding: 6rem 5%; }
+
+  .section-label {
+    font-size: 0.75rem;
+    letter-spacing: 0.14em;
+    text-transform: uppercase;
+    color: var(--gold);
+    font-weight: 500;
+    margin-bottom: 0.9rem;
+    display: flex;
+    align-items: center;
+    gap: 0.6rem;
+  }
+  .section-label::before {
+    content: '';
+    display: block;
+    width: 20px; height: 1px;
+    background: var(--gold);
+  }
+
+  .section-title {
+    font-family: var(--serif);
+    font-size: clamp(2rem, 4vw, 3.4rem);
+    font-weight: 300;
+    line-height: 1.2;
+    color: var(--ink);
+    margin-bottom: 1.2rem;
+  }
+
+  .section-title em { font-style: italic; color: var(--sage-deep); }
+
+  .section-body {
+    font-size: 1rem;
+    color: var(--ink-soft);
+    max-width: 520px;
+    line-height: 1.8;
+    font-weight: 300;
+  }
+
+  /* ── ABOUT ── */
+  .about-grid {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 6rem;
+    align-items: center;
+  }
+
+  .about-image-wrap {
+    position: relative;
+  }
+
+  .about-image-block {
+    width: 100%;
+    aspect-ratio: 4/5;
+    background: var(--sage-light);
+    border-radius: 4px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    overflow: hidden;
+    position: relative;
+  }
+
+  .about-image-block::after {
+    content: '';
+    position: absolute;
+    inset: 0;
+    background: linear-gradient(135deg, transparent 60%, rgba(58,90,60,0.08) 100%);
+  }
+
+  .about-initials {
+    font-family: var(--serif);
+    font-size: 9rem;
+    font-weight: 300;
+    color: var(--sage-mid);
+    opacity: 0.3;
+    font-style: italic;
+    user-select: none;
+  }
+
+  .about-badge {
+    position: absolute;
+    bottom: -1.4rem;
+    right: -1.4rem;
+    background: var(--white);
+    border: 1px solid var(--border);
+    border-radius: 4px;
+    padding: 1rem 1.3rem;
+    box-shadow: 0 4px 24px rgba(58,90,60,0.08);
+    z-index: 2;
+  }
+
+  .about-badge strong {
+    display: block;
+    font-family: var(--serif);
+    font-size: 2rem;
+    font-weight: 300;
+    color: var(--sage-deep);
+    line-height: 1;
+  }
+
+  .about-badge span {
+    font-size: 0.75rem;
+    color: var(--ink-muted);
+    text-transform: uppercase;
+    letter-spacing: 0.08em;
+  }
+
+  .about-content { padding: 2rem 0; }
+
+  .about-stats {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 1rem;
+    margin-top: 2.4rem;
+  }
+
+  .stat-card {
+    background: var(--sage-tint);
+    border: 1px solid var(--border);
+    border-radius: 4px;
+    padding: 1.2rem;
+  }
+
+  .stat-card strong {
+    display: block;
+    font-family: var(--serif);
+    font-size: 1.8rem;
+    font-weight: 400;
+    color: var(--sage-deep);
+  }
+
+  .stat-card span {
+    font-size: 0.8rem;
+    color: var(--ink-muted);
+  }
+
+  /* ── SERVICES ── */
+  .services-bg {
+    background: var(--sage-tint);
+    border-top: 1px solid var(--border);
+    border-bottom: 1px solid var(--border);
+  }
+
+  .services-header {
+    display: flex;
+    align-items: flex-end;
+    justify-content: space-between;
+    margin-bottom: 3.5rem;
+    gap: 2rem;
+    flex-wrap: wrap;
+  }
+
+  .services-grid {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: 1.5rem;
+  }
+
+  .service-card {
+    background: var(--white);
+    border: 1px solid var(--border);
+    border-radius: 4px;
+    padding: 2.2rem 2rem;
+    position: relative;
+    transition: transform 0.25s, box-shadow 0.25s;
+  }
+
+  .service-card:hover {
+    transform: translateY(-4px);
+    box-shadow: 0 12px 40px rgba(58,90,60,0.1);
+  }
+
+  .service-card.featured {
+    background: var(--white);
+    border-color: var(--sage-deep);
+  }
+
+  .service-icon {
+    width: 44px; height: 44px;
+    border-radius: 50%;
+    background: var(--sage-light);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    margin-bottom: 1.6rem;
+    font-size: 1.2rem;
+  }
+
+  .service-card.featured .service-icon {
+    background: rgba(255,255,255,0.15);
+  }
+
+  .service-card h3 {
+    font-family: var(--serif);
+    font-size: 1.5rem;
+    font-weight: 400;
+    margin-bottom: 0.8rem;
+    color: var(--ink);
+  }
+
+  .service-card.featured h3 { color: var(--ink); }
+
+  .service-card p {
+    font-size: 0.9rem;
+    color: var(--ink-soft);
+    line-height: 1.75;
+    font-weight: 300;
+  }
+
+  .service-card.featured p { color: var(--ink-soft); }
+
+  .service-tag {
+    display: inline-block;
+    margin-top: 1.4rem;
+    font-size: 0.72rem;
+    letter-spacing: 0.1em;
+    text-transform: uppercase;
+    color: var(--gold);
+    font-weight: 500;
+  }
+
+  .service-card.featured .service-tag { color: var(--gold-light); }
+
+  /* ── PACKAGES ── */
+  .packages-grid {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: 1.5rem;
+    margin-top: 3.5rem;
+  }
+
+  .package-card {
+    border: 1px solid var(--border);
+    border-radius: 4px;
+    padding: 2.4rem 2rem;
+    position: relative;
+    background: var(--white);
+    transition: transform 0.25s, box-shadow 0.25s;
+  }
+
+  .package-card:hover { transform: translateY(-3px); box-shadow: 0 10px 36px rgba(0,0,0,0.07); }
+
+  .package-card.highlighted {
+    border-color: var(--sage-deep);
+    border-width: 2px;
+  }
+
+  .popular-badge {
+    position: absolute;
+    top: -13px; left: 50%;
+    transform: translateX(-50%);
+    background: var(--sage-deep);
+    color: var(--white);
+    font-size: 0.7rem;
+    letter-spacing: 0.1em;
+    text-transform: uppercase;
+    padding: 0.3rem 1rem;
+    border-radius: 100px;
+    white-space: nowrap;
+  }
+
+  .package-name {
+    font-family: var(--serif);
+    font-size: 1.6rem;
+    font-weight: 400;
+    color: var(--ink);
+    margin-bottom: 0.3rem;
+  }
+
+  .package-price {
+    font-family: var(--serif);
+    font-size: 2.4rem;
+    font-weight: 300;
+    color: var(--sage-deep);
+    margin: 1rem 0 0.3rem;
+  }
+
+  .package-price sup {
+    font-size: 1rem;
+    vertical-align: super;
+    font-family: var(--sans);
+    font-weight: 400;
+  }
+
+  .package-note {
+    font-size: 0.78rem;
+    color: var(--ink-muted);
+    margin-bottom: 1.8rem;
+  }
+
+  .package-divider {
+    border: none;
+    border-top: 1px solid var(--border);
+    margin: 1.5rem 0;
+  }
+
+  .package-features {
+    list-style: none;
+    display: flex;
+    flex-direction: column;
+    gap: 0.75rem;
+  }
+
+  .package-features li {
+    font-size: 0.88rem;
+    color: var(--ink-soft);
+    display: flex;
+    align-items: flex-start;
+    gap: 0.7rem;
+    font-weight: 300;
+  }
+
+  .check {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    width: 16px; height: 16px;
+    border-radius: 50%;
+    background: var(--sage-light);
+    color: var(--sage-deep);
+    font-size: 0.6rem;
+    flex-shrink: 0;
+    margin-top: 2px;
+    font-weight: 700;
+  }
+
+  .package-cta {
+    display: block;
+    margin-top: 2rem;
+    text-align: center;
+    padding: 0.85rem 1.5rem;
+    border-radius: 100px;
+    font-size: 0.85rem;
+    font-weight: 500;
+    text-decoration: none;
+    transition: all 0.25s;
+  }
+
+  .package-cta-outline {
+    border: 1px solid var(--sage-deep);
+    color: var(--sage-deep);
+  }
+  .package-cta-outline:hover { background: var(--sage-light); }
+
+  .package-cta-filled {
+    background: var(--sage-deep);
+    color: var(--white);
+    border: 1px solid var(--sage-deep);
+  }
+  .package-cta-filled:hover { background: var(--sage-mid); }
+
+  /* ── WORKS ── */
+  .works-grid {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: 1.5rem;
+    margin-top: 3.5rem;
+  }
+
+  .work-card {
+    border-radius: 4px;
+    overflow: hidden;
+    border: 1px solid var(--border);
+    transition: transform 0.3s, box-shadow 0.3s;
+    cursor: pointer;
+  }
+
+  .work-card:hover {
+    transform: translateY(-5px);
+    box-shadow: 0 16px 48px rgba(58,90,60,0.12);
+  }
+
+  .work-thumb {
+    aspect-ratio: 4/3;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    position: relative;
+    overflow: hidden;
+  }
+
+  .work-thumb-1 { background: linear-gradient(135deg, #E8F0E9 0%, #C8D9C9 100%); }
+  .work-thumb-2 { background: linear-gradient(135deg, #F5EDE0 0%, #E8D4BE 100%); }
+  .work-thumb-3 { background: linear-gradient(135deg, #EBF0EB 0%, #D0DDD0 100%); }
+
+  .work-thumb-text {
+    font-family: var(--serif);
+    font-size: 3.5rem;
+    font-weight: 300;
+    font-style: italic;
+    opacity: 0.25;
+    color: var(--sage-deep);
+    user-select: none;
+  }
+
+  .work-info {
+    background: var(--white);
+    padding: 1.3rem 1.4rem;
+  }
+
+  .work-tag {
+    font-size: 0.7rem;
+    text-transform: uppercase;
+    letter-spacing: 0.1em;
+    color: var(--gold);
+    font-weight: 500;
+    margin-bottom: 0.4rem;
+  }
+
+  .work-title {
+    font-family: var(--serif);
+    font-size: 1.2rem;
+    font-weight: 400;
+    color: var(--ink);
+  }
+
+  /* ── TESTIMONIAL ── */
+  .testimonial-bg {
+    background: var(--sage-deep);
+  }
+
+  .testimonial-inner {
+    max-width: 700px;
+    margin: 0 auto;
+    text-align: center;
+  }
+
+  .quote-mark {
+    font-family: var(--serif);
+    font-size: 6rem;
+    line-height: 0.5;
+    color: var(--gold);
+    opacity: 0.5;
+    display: block;
+    margin-bottom: 1.5rem;
+  }
+
+  .testimonial-text {
+    font-family: var(--serif);
+    font-size: clamp(1.3rem, 2.5vw, 2rem);
+    font-weight: 300;
+    font-style: italic;
+    color: var(--white);
+    line-height: 1.6;
+    margin-bottom: 2rem;
+  }
+
+  .testimonial-author {
+    font-size: 0.82rem;
+    text-transform: uppercase;
+    letter-spacing: 0.12em;
+    color: rgba(255,255,255,0.55);
+  }
+
+  .testimonial-author strong {
+    display: block;
+    color: var(--white);
+    margin-bottom: 0.2rem;
+    font-family: var(--serif);
+    font-size: 1rem;
+    font-style: italic;
+    text-transform: none;
+    letter-spacing: 0;
+    font-weight: 300;
+  }
+
+  /* ── PROCESS ── */
+  .process-steps {
+    display: grid;
+    grid-template-columns: repeat(4, 1fr);
+    gap: 1rem;
+    margin-top: 3.5rem;
+    position: relative;
+  }
+
+  .process-steps::before {
+    content: '';
+    position: absolute;
+    top: 2rem;
+    left: 2.5%;
+    right: 2.5%;
+    height: 1px;
+    background: var(--border);
+    z-index: 0;
+  }
+
+  .step {
+    position: relative;
+    z-index: 1;
+    padding-top: 0.5rem;
+    text-align: center;
+  }
+
+  .step-num {
+    width: 40px; height: 40px;
+    border-radius: 50%;
+    background: var(--white);
+    border: 1px solid var(--sage-mid);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-family: var(--serif);
+    font-size: 1.1rem;
+    font-weight: 400;
+    color: var(--sage-deep);
+    margin: 0 auto 1.2rem;
+  }
+
+  .step h4 {
+    font-family: var(--serif);
+    font-size: 1.15rem;
+    font-weight: 400;
+    color: var(--ink);
+    margin-bottom: 0.5rem;
+  }
+
+  .step p {
+    font-size: 0.83rem;
+    color: var(--ink-muted);
+    font-weight: 300;
+    line-height: 1.65;
+  }
+
+  /* ── CTA SECTION ── */
+  .cta-section {
+    background: var(--gold-light);
+    border-top: 1px solid #E8D8C4;
+    border-bottom: 1px solid #E8D8C4;
+    text-align: center;
+  }
+
+  .cta-section .section-title { color: var(--ink); }
+  .cta-section .section-body { margin: 0 auto 2.5rem; }
+
+  /* ── CONTACT ── */
+  .contact-grid {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 5rem;
+    align-items: start;
+  }
+
+  .contact-form {
+    display: flex;
+    flex-direction: column;
+    gap: 1.2rem;
+  }
+
+  .form-row {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 1rem;
+  }
+
+  .form-field {
+    display: flex;
+    flex-direction: column;
+    gap: 0.4rem;
+  }
+
+  .form-field label {
+    font-size: 0.78rem;
+    letter-spacing: 0.06em;
+    text-transform: uppercase;
+    color: var(--ink-muted);
+    font-weight: 500;
+  }
+
+  .form-field input,
+  .form-field textarea,
+  .form-field select {
+    border: 1px solid var(--border);
+    background: var(--white);
+    border-radius: 4px;
+    padding: 0.8rem 1rem;
+    font-family: var(--sans);
+    font-size: 0.9rem;
+    color: var(--ink);
+    font-weight: 300;
+    outline: none;
+    transition: border-color 0.2s;
+    width: 100%;
+    appearance: none;
+  }
+
+  .form-field input:focus,
+  .form-field textarea:focus,
+  .form-field select:focus {
+    border-color: var(--sage-mid);
+  }
+
+  .form-field textarea { resize: vertical; min-height: 130px; }
+
+  .submit-btn {
+    background: var(--sage-deep);
+    color: var(--white);
+    border: none;
+    border-radius: 100px;
+    padding: 1rem 2.5rem;
+    font-family: var(--sans);
+    font-size: 0.9rem;
+    font-weight: 500;
+    cursor: pointer;
+    letter-spacing: 0.03em;
+    transition: background 0.25s, transform 0.2s;
+    align-self: flex-start;
+  }
+
+  .submit-btn:hover { background: var(--sage-mid); transform: translateY(-1px); }
+
+  .contact-info { padding-top: 0.5rem; }
+
+  .contact-info .section-body { margin-bottom: 2.5rem; }
+
+  .contact-details {
+    display: flex;
+    flex-direction: column;
+    gap: 1.2rem;
+  }
+
+  .contact-item {
+    display: flex;
+    align-items: flex-start;
+    gap: 1rem;
+  }
+
+  .contact-item-icon {
+    width: 38px; height: 38px;
+    border-radius: 50%;
+    background: var(--sage-light);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 1rem;
+    flex-shrink: 0;
+  }
+
+  .contact-item-text strong {
+    display: block;
+    font-size: 0.82rem;
+    text-transform: uppercase;
+    letter-spacing: 0.08em;
+    color: var(--ink-muted);
+    margin-bottom: 0.2rem;
+  }
+
+  .contact-item-text span {
+    font-size: 0.93rem;
+    color: var(--ink-soft);
+  }
+
+  /* ── FOOTER ── */
+  footer {
+    background: var(--ink);
+    padding: 3rem 5%;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    flex-wrap: wrap;
+    gap: 1rem;
+  }
+
+  .footer-logo {
+    font-family: var(--serif);
+    font-size: 1.3rem;
+    font-weight: 400;
+    font-style: italic;
+    color: var(--white);
+  }
+
+  .footer-text {
+    font-size: 0.8rem;
+    color: rgba(255,255,255,0.4);
+  }
+
+  .footer-links {
+    display: flex;
+    gap: 2rem;
+    list-style: none;
+  }
+
+  .footer-links a {
+    text-decoration: none;
+    font-size: 0.78rem;
+    color: rgba(255,255,255,0.45);
+    letter-spacing: 0.06em;
+    text-transform: uppercase;
+    transition: color 0.25s;
+  }
+
+  .footer-links a:hover { color: rgba(255,255,255,0.85); }
+
+  /* ── ANIMATIONS ── */
+  @keyframes fadeUp {
+    from { opacity: 0; transform: translateY(24px); }
+    to   { opacity: 1; transform: translateY(0); }
+  }
+
+  .hero-inner > * {
+    animation: fadeUp 0.7s ease both;
+  }
+  .hero-eyebrow { animation-delay: 0.1s; }
+  .hero h1      { animation-delay: 0.22s; }
+  .hero-sub     { animation-delay: 0.34s; }
+  .hero-actions { animation-delay: 0.46s; }
+
+  /* ── RESPONSIVE ── */
+  @media (max-width: 900px) {
+    .about-grid,
+    .contact-grid { grid-template-columns: 1fr; gap: 3rem; }
+    .services-grid,
+    .packages-grid,
+    .works-grid { grid-template-columns: 1fr; }
+    .process-steps { grid-template-columns: 1fr 1fr; }
+    .process-steps::before { display: none; }
+    .form-row { grid-template-columns: 1fr; }
+    .nav-links { display: none; }
+  }
+</style>
+</head>
+<body>
+
+<!-- NAV -->
+<nav>
+  <a href="#" class="nav-logo">valere mbaya</a>
+  <ul class="nav-links">
+    <li><a href="#about">About</a></li>
+    <li><a href="#services">Services</a></li>
+    <li><a href="#packages">Packages</a></li>
+    <li><a href="#works">Work</a></li>
+    <li><a href="#contact" class="nav-cta">Let's Talk</a></li>
+  </ul>
+</nav>
+
+<!-- HERO -->
+<section class="hero" id="home">
+  <div class="hero-dot-grid"></div>
+  <div class="hero-inner">
+    <p class="hero-eyebrow">Web &amp; Brand Designer</p>
+    <h1>Your business<br/><em>deserves</em> a website<br/>that works.</h1>
+    <p class="hero-sub">
+      I help small businesses, solo founders, and growing brands get online 
+      with a beautiful, clear marketing site — so your customers find you, 
+      trust you, and reach out.
+    </p>
+    <div class="hero-actions">
+      <a href="#packages" class="btn-primary">See What's Included</a>
+      <a href="#works" class="btn-ghost">View My Work</a>
+    </div>
+  </div>
+</section>
+
+<!-- TRUST BAR -->
+<div class="trust-bar">
+  <div class="trust-item"><div class="trust-dot"></div> Marketing Websites</div>
+  <div class="trust-item"><div class="trust-dot"></div> Fliers &amp; Brand Design</div>
+  <div class="trust-item"><div class="trust-dot"></div> Web &amp; Mobile Apps</div>
+  <div class="trust-item"><div class="trust-dot"></div> Fast Turnaround</div>
+  <div class="trust-item"><div class="trust-dot"></div> Ongoing Support</div>
+</div>
+
+<!-- ABOUT -->
+<section id="about">
+  <div class="about-grid">
+    <div class="about-image-wrap">
+      <div class="about-image-block">
+        <span class="about-initials">VG</span>
+      </div>
+      <div class="about-badge">
+        <strong>3+</strong>
+        <span>Years designing</span>
+      </div>
+    </div>
+    <div class="about-content">
+      <p class="section-label">About Me</p>
+      <h2 class="section-title">I turn ideas<br/><em>into real websites.</em></h2>
+      <p class="section-body">
+        Hi, I'm valere mbaya a web and brand designer focused on one thing: 
+        helping small businesses look as good online as they are in real life.
+        <br/><br/>
+        Whether you're just starting out or ready to grow, I create clean, 
+        professional websites that represent your brand honestly and attract 
+        the right clients — without the confusion or the clutter.
+      </p>
+      <div class="about-stats">
+          <strong>100%</strong>
+          <span>Client satisfaction</span>
+        </div>
+        <div class="stat-card">
+          <strong>3</strong>
+          <span>Service levels</span>
+        </div>
+        <div class="stat-card">
+          <strong>7 days</strong>
+          <span>Avg. delivery time</span>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- SERVICES -->
+<section id="services" class="services-bg">
+  <div class="services-header">
+    <div>
+      <p class="section-label">What I Do</p>
+      <h2 class="section-title">Three things,<br/><em>done really well.</em></h2>
+    </div>
+    <p class="section-body" style="max-width: 340px;">
+      My focus is simple: get your business seen online, make it look great, 
+      and give you the tools to grow.
+    </p>
+  </div>
+  <div class="services-grid">
+    <div class="service-card featured">
+      ''
+      <h3>Marketing Websites</h3>
+      <p>A clean, professional site that tells people who you are, what you do, and how to hire you. 
+        Perfect for salons, restaurants, coaches, shops, and any local business.</p>
+      <span class="service-tag">Most Popular</span>
+    </div>
+    <div class="service-card">
+      
+      <h3>Brand Design &amp; Fliers</h3>
+      <p>Print or digital I design fliers, logos, menus, and brand kits that make your business recognizable and professional.</p>
+      <span class="service-tag">Design Packages</span>
+    </div>
+    <div class="service-card">
+      
+      <h3>Web &amp; Mobile Apps</h3>
+      <p>For businesses that need more booking systems, dashboards, customer portals, or full-scale web apps built to grow alongside your business.</p>
+      <span class="service-tag">Custom Builds</span>
+    </div>
+  </div>
+</section>
+
+<!-- PACKAGES -->
+<section id="packages">
+  <div style="text-align: center; max-width: 540px; margin: 0 auto;">
+    <p class="section-label" style="justify-content: center;">Packages</p>
+    <h2 class="section-title">Pick what fits <em>right now.</em></h2>
+    <p class="section-body" style="margin: 0 auto;">
+      Every package includes a professional, mobile-friendly website. 
+      You can always upgrade later as your business grows.
+    </p>
+  </div>
+  <div class="packages-grid">
+
+    <!-- STARTER -->
+    <div class="package-card">
+      <p class="package-name">Starter</p>
+      <p style="font-size:0.82rem; color:var(--ink-muted); margin-bottom:0.5rem;">Great for getting online fast</p>
+      <p class="package-price"><sup>KES</sup>25K</p>
+      <p class="package-note">One-time payment · Ready in 5–9 days</p>
+      <hr class="package-divider"/>
+      <ul class="package-features">
+        <li><span class="check">✓</span> 1–3 page website</li>
+        <li><span class="check">✓</span> Mobile-friendly design</li>
+        <li><span class="check">✓</span> Contact form included</li>
+        <li><span class="check">✓</span> Basic SEO setup</li>
+        <li><span class="check">✓</span> 1 round of revisions</li>
+        <li><span class="check">✓</span> 30 days of support</li>
+      </ul>
+      <a href="#contact" class="package-cta package-cta-outline">Get Started</a>
+    </div>
+
+    <!-- GROWTH (highlighted) -->
+    <div class="package-card highlighted">
+      <div class="popular-badge">Most Popular</div>
+      <p class="package-name">Growth</p>
+      <p style="font-size:0.82rem; color:var(--ink-muted); margin-bottom:0.5rem;">For brands ready to stand out</p>
+      <p class="package-price"><sup>KES</sup>55K</p>
+      <p class="package-note">One-time payment · Ready in 10–14 days</p>
+      <hr class="package-divider"/>
+      <ul class="package-features">
+        <li><span class="check">✓</span> Up to 6 pages</li>
+        <li><span class="check">✓</span> Custom design (your branding)</li>
+        <li><span class="check">✓</span> Photo gallery or portfolio</li>
+        <li><span class="check">✓</span> Google Maps &amp; social links</li>
+        <li><span class="check">✓</span> Full SEO setup</li>
+        <li><span class="check">✓</span> 2 rounds of revisions</li>
+        <li><span class="check">✓</span> 60 days of support</li>
+        <li><span class="check">✓</span> 1 matching flier design</li>
+      </ul>
+      <a href="#contact" class="package-cta package-cta-filled">Get Started</a>
+    </div>
+
+    <!-- PREMIUM -->
+    <div class="package-card">
+      <p class="package-name">Premium</p>
+      <p style="font-size:0.82rem; color:var(--ink-muted); margin-bottom:0.5rem;">Full brand + powerful web presence</p>
+      <p class="package-price"><sup>KES</sup>120K+</p>
+      <p class="package-note">Custom quote · Timeline varies</p>
+      <hr class="package-divider"/>
+      <ul class="package-features">
+        <li><span class="check">✓</span> Unlimited pages</li>
+        <li><span class="check">✓</span> Full brand identity kit</li>
+        <li><span class="check">✓</span> Online store or booking system</li>
+        <li><span class="check">✓</span> Blog or content section</li>
+        <li><span class="check">✓</span> Advanced SEO &amp; analytics</li>
+        <li><span class="check">✓</span> Unlimited revisions</li>
+        <li><span class="check">✓</span> 90 days priority support</li>
+        <li><span class="check">✓</span> App development (on request)</li>
+      </ul>
+      <a href="#contact" class="package-cta package-cta-outline">Request a Quote</a>
+    </div>
+
+  </div>
+</section>
+
+<!-- HOW IT WORKS -->
+<section class="services-bg">
+  <div style="text-align: center; max-width: 500px; margin: 0 auto 0;">
+    <p class="section-label" style="justify-content: center;">My Process</p>
+    <h2 class="section-title">Simple steps,<br/><em>smooth delivery.</em></h2>
+  </div>
+  <div class="process-steps">
+    <div class="step">
+      <div class="step-num">1</div>
+      <h4>We Talk</h4>
+      <p>A short call or message to understand your business, your goals, and what you need.</p>
+    </div>
+    <div class="step">
+      <div class="step-num">2</div>
+      <h4>I Design</h4>
+      <p>I create a design that fits your brand — you review it and we fine-tune together.</p>
+    </div>
+    <div class="step">
+      <div class="step-num">3</div>
+      <h4>We Review</h4>
+      <p>You see the live site before anything goes public. We fix, polish, and finalise.</p>
+    </div>
+    <div class="step">
+      <div class="step-num">4</div>
+      <h4>You Launch</h4>
+      <p>Your site goes live. I hand over everything and stay available if you need me.</p>
+    </div>
+  </div>
+</section>
+
+<!-- WORKS -->
+<section id="works">
+  <div style="display:flex; align-items:flex-end; justify-content:space-between; margin-bottom:0; gap:2rem; flex-wrap:wrap;">
+    <div>
+      <p class="section-label">Selected Work</p>
+      <h2 class="section-title">Projects I'm<br/><em>proud of.</em></h2>
+    </div>
+    <a href="#contact" class="btn-ghost" style="margin-bottom:0.5rem;">See all work</a>
+  </div>
+  <div class="works-grid">
+    <div class="work-card">
+      <div class="work-thumb work-thumb-1">
+        <span class="work-thumb-text">Bloom</span>
+      </div>
+      <div class="work-info">
+        <p class="work-tag">Salon · Marketing Website</p>
+        <p class="work-title">Bloom Beauty Studio</p>
+      </div>
+    </div>
+    <div class="work-card">
+      <div class="work-thumb work-thumb-2">
+        <span class="work-thumb-text">Spice</span>
+      </div>
+      <div class="work-info">
+        <p class="work-tag">Restaurant · Brand + Flier</p>
+        <p class="work-title">Spice Garden Kitchen</p>
+      </div>
+    </div>
+    <div class="work-card">
+      <div class="work-thumb work-thumb-3">
+        <span class="work-thumb-text">Hana</span>
+      </div>
+      <div class="work-info">
+        <p class="work-tag">Coaching · Web + App</p>
+        <p class="work-title">Hana Life Coaching</p>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- TESTIMONIAL -->
+<section class="testimonial-bg">
+  <div class="testimonial-inner">
+    <span class="quote-mark">&ldquo;</span>
+    <p class="testimonial-text">
+      Before working with Valere, my business had no online presence at all. 
+      Now I have a site I'm genuinely proud to share — and I've already gotten 
+      new market from it in the first month.
+    </p>
+    <div class="testimonial-author">
+      <strong>MARK KABUGI</strong>
+      Owner, BUGI BUILDERS — Nairobi
+    </div>
+  </div>
+</section>
+
+<!-- CONTACT -->
+<section id="contact">
+  <div class="contact-grid">
+    <div class="contact-info">
+      <p class="section-label">Get In Touch</p>
+      <h2 class="section-title">Ready to<br/><em>get started?</em></h2>
+      <p class="section-body">
+        Fill in the form and I'll get back to you within 24 hours. 
+        No pressure, just a friendly conversation about 
+        what your business needs.
+      </p>
+      <div class="contact-details">
+        <div class="contact-item">
+          <div class="contact-item-text">
+            <strong>Email</strong>
+            <span>valeregmbaya@gmail.com</span>
+          </div>
+        </div>
+        <div class="contact-item">
+          <div class="contact-item-text">
+            <strong>WhatsApp</strong>
+            <span>0794641041</span>
+          </div>
+        </div>
+        <div class="contact-item">
+          <div class="contact-item-text">
+            <strong>Based In</strong>
+            <span>Nairobi, Kenya — serving clients everywhere</span>
+          </div>
+        </div>
+      </div>
+    </div>
+    <div>
+      <form class="contact-form" onsubmit="handleSubmit(event)">
+        <div class="form-row">
+          <div class="form-field">
+            <label for="name">Your Name</label>
+            <input type="text" id="name" placeholder="Jane Wanjiku" required/>
+          </div>
+          <div class="form-field">
+            <label for="email">Email Address</label>
+            <input type="email" id="email" placeholder="you@email.com" required/>
+          </div>
+        </div>
+        <div class="form-field">
+          <label for="business">Business Name</label>
+          <input type="text" id="business" placeholder="What's your business called?"/>
+        </div>
+        <div class="form-field">
+          <label for="service">What Do You Need?</label>
+          <select id="service">
+            <option value="">Choose a service…</option>
+            <option>Marketing Website (Starter)</option>
+            <option>Marketing Website (Growth)</option>
+            <option>Marketing Website (Premium)</option>
+            <option>Brand Design / Flier</option>
+            <option>Web or Mobile App</option>
+            <option>Not sure yet — let's chat</option>
+          </select>
+        </div>
+        <div class="form-field">
+          <label for="message">Tell Me About Your Business</label>
+          <textarea id="message" placeholder="What do you do, and what would you like the website to achieve?"></textarea>
+        </div>
+        <button type="submit" class="submit-btn" id="submit-btn">Send Message →</button>
+        <p id="form-msg" style="font-size:0.85rem; color:var(--sage-deep); display:none; margin-top:0.5rem;">
+          ✓ Message sent! I'll be in touch within 24 hours.
+        </p>
+      </form>
+    </div>
+  </div>
+</section>
+
+<!-- FOOTER -->
+<footer>
+  <span class="footer-logo">valere mbaya</span>
+  <ul class="footer-links">
+    <li><a href="#about">About</a></li>
+    <li><a href="#services">Services</a></li>
+    <li><a href="#packages">Packages</a></li>
+    <li><a href="#contact">Contact</a></li>
+  </ul>
+  <p class="footer-text">© 2025 valere mbaya · All rights reserved</p>
+</footer>
+
+<script>
+  function handleSubmit(e) {
+    e.preventDefault();
+    const btn = document.getElementById('submit-btn');
+    const msg = document.getElementById('form-msg');
+    btn.textContent = 'Sending…';
+    btn.style.opacity = '0.7';
+    btn.disabled = true;
+    setTimeout(() => {
+      btn.style.display = 'none';
+      msg.style.display = 'block';
+      e.target.reset();
+    }, 1200);
+  }
+
+  // Fade-in on scroll
+  const observer = new IntersectionObserver((entries) => {
+    entries.forEach(entry => {
+      if (entry.isIntersecting) {
+        entry.target.style.opacity = '1';
+        entry.target.style.transform = 'translateY(0)';
+      }
+    });
+  }, { threshold: 0.1 });
+
+  document.querySelectorAll('.service-card, .package-card, .work-card, .step').forEach(el => {
+    el.style.opacity = '0';
+    el.style.transform = 'translateY(20px)';
+    el.style.transition = 'opacity 0.6s ease, transform 0.6s ease';
+    observer.observe(el);
+  });
+</script>
+</body>
+</html>
