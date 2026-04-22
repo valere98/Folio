@@ -3,7 +3,7 @@
 <head>
 <meta charset="UTF-8" />
 <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
-<title>Sophia Nderi — Web & Brand Designer</title>
+<title>VALERE MBAYA — Web & Brand Designer</title>
 <link rel="preconnect" href="https://fonts.googleapis.com"/>
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin/>
 <link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,300;0,400;0,500;0,600;1,300;1,400&family=DM+Sans:wght@300;400;500&display=swap" rel="stylesheet"/>
@@ -951,7 +951,7 @@
 
 <!-- NAV -->
 <nav>
-  <a href="#" class="nav-logo">valere mbaya</a>
+  <a href="#" class="nav-logo">VALERE MBAYA.</a>
   <ul class="nav-links">
     <li><a href="#about">About</a></li>
     <li><a href="#services">Services</a></li>
@@ -969,7 +969,7 @@
     <h1>Your business<br/><em>deserves</em> a website<br/>that works.</h1>
     <p class="hero-sub">
       I help small businesses, solo founders, and growing brands get online 
-      with a beautiful, clear marketing site — so your customers find you, 
+      with a beautiful, clear marketing site  so your customers find you, 
       trust you, and reach out.
     </p>
     <div class="hero-actions">
@@ -1004,12 +1004,12 @@
       <p class="section-label">About Me</p>
       <h2 class="section-title">I turn ideas<br/><em>into real websites.</em></h2>
       <p class="section-body">
-        Hi, I'm valere mbaya a web and brand designer focused on one thing: 
+        Hi, I'm Valere Mbaya a web and brand designer focused on one thing: 
         helping small businesses look as good online as they are in real life.
         <br/><br/>
         Whether you're just starting out or ready to grow, I create clean, 
         professional websites that represent your brand honestly and attract 
-        the right clients — without the confusion or the clutter.
+        the right clients  without the confusion or the clutter.
       </p>
       <div class="about-stats">
           <strong>100%</strong>
@@ -1152,7 +1152,7 @@
     <div class="step">
       <div class="step-num">2</div>
       <h4>I Design</h4>
-      <p>I create a design that fits your brand — you review it and we fine-tune together.</p>
+      <p>I create a design that fits your brand  you review it and we fine-tune together.</p>
     </div>
     <div class="step">
       <div class="step-num">3</div>
@@ -1177,33 +1177,37 @@
     <a href="#contact" class="btn-ghost" style="margin-bottom:0.5rem;">See all work</a>
   </div>
   <div class="works-grid">
-    <div class="work-card">
-      <div class="work-thumb work-thumb-1">
-        <span class="work-thumb-text">Bloom</span>
+    <a href="https://bugi-c.vercel.app/" target="_blank" style="text-decoration: none;">
+      <div class="work-card">
+        <div class="work-thumb work-thumb-1">
+          <span class="work-thumb-text">BUGI BUILDERS</span>
+        </div>
+        <div class="work-info">
+          <p class="work-tag">BUGI BUILDERS · Marketing Website</p>
+          <p class="work-title">BUGI BUILDERS, DESIGN & ARCHITECTURE.</p>
+        </div>
       </div>
-      <div class="work-info">
-        <p class="work-tag">Salon · Marketing Website</p>
-        <p class="work-title">Bloom Beauty Studio</p>
-      </div>
-    </div>
+    </a>
     <div class="work-card">
       <div class="work-thumb work-thumb-2">
         <span class="work-thumb-text">Spice</span>
       </div>
       <div class="work-info">
         <p class="work-tag">Restaurant · Brand + Flier</p>
-        <p class="work-title">Spice Garden Kitchen</p>
+        <p class="work-title">Spice Garden Kitchen . <br> coming soon.</p>
       </div>
     </div>
-    <div class="work-card">
-      <div class="work-thumb work-thumb-3">
-        <span class="work-thumb-text">Hana</span>
+    <a href="https://trifort-builders-x8nu.vercel.app/" target="_blank" style="text-decoration: none;">
+      <div class="work-card">
+        <div class="work-thumb work-thumb-3">
+          <span class="work-thumb-text">TRI-FORT.</span>
+        </div>
+        <div class="work-info">
+          <p class="work-tag">Construction · Web + App</p>
+          <p class="work-title">TR-FORT CONSTRUCTION.</p>
+        </div>
       </div>
-      <div class="work-info">
-        <p class="work-tag">Coaching · Web + App</p>
-        <p class="work-title">Hana Life Coaching</p>
-      </div>
-    </div>
+    </a>
   </div>
 </section>
 
@@ -1213,7 +1217,7 @@
     <span class="quote-mark">&ldquo;</span>
     <p class="testimonial-text">
       Before working with Valere, my business had no online presence at all. 
-      Now I have a site I'm genuinely proud to share — and I've already gotten 
+      Now I have a site I'm genuinely proud to share  and I've already gotten 
       new market from it in the first month.
     </p>
     <div class="testimonial-author">
@@ -1316,11 +1320,40 @@
     btn.textContent = 'Sending…';
     btn.style.opacity = '0.7';
     btn.disabled = true;
-    setTimeout(() => {
-      btn.style.display = 'none';
-      msg.style.display = 'block';
-      e.target.reset();
-    }, 1200);
+
+    // Collect form data
+    const formData = {
+      name: document.getElementById('name').value,
+      email: document.getElementById('email').value,
+      business: document.getElementById('business').value,
+      service: document.getElementById('service').value,
+      message: document.getElementById('message').value
+    };
+
+    // Send to Formspree as JSON
+    fetch('https://formspree.io/f/mvzdvgqa', {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/json',
+      },
+      body: JSON.stringify(formData)
+    })
+    .then(response => {
+      if (response.ok) {
+        btn.style.display = 'none';
+        msg.style.display = 'block';
+        e.target.reset();
+      } else {
+        throw new Error('Form submission failed');
+      }
+    })
+    .catch(error => {
+      console.error('Error:', error);
+      btn.textContent = 'Send Message →';
+      btn.style.opacity = '1';
+      btn.disabled = false;
+      alert('Error sending message. Please try again.');
+    });
   }
 
   // Fade-in on scroll
