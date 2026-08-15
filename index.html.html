@@ -581,31 +581,54 @@
   /* ── WORKS ── */
   .works-grid {
     display: grid;
-    grid-template-columns: repeat(3, 1fr);
-    gap: 1.5rem;
+    grid-template-columns: repeat(3, minmax(290px, 1fr));
+    gap: 2rem;
     margin-top: 3.5rem;
+    align-items: stretch;
   }
 
   .work-card {
-    border-radius: 4px;
+    border-radius: 10px;
     overflow: hidden;
     border: 1px solid var(--border);
     transition: transform 0.3s, box-shadow 0.3s;
     cursor: pointer;
+    min-height: 100%;
+    background: var(--white);
   }
 
   .work-card:hover {
-    transform: translateY(-5px);
-    box-shadow: 0 16px 48px rgba(58,90,60,0.12);
+    transform: translateY(-7px);
+    box-shadow: 0 18px 52px rgba(58,90,60,0.14);
   }
 
   .work-thumb {
-    aspect-ratio: 4/3;
+    aspect-ratio: 5 / 4;
     display: flex;
     align-items: center;
     justify-content: center;
     position: relative;
     overflow: hidden;
+    background: linear-gradient(135deg, #EEF3EE 0%, #D8E2D7 100%);
+    min-height: 270px;
+  }
+
+  .work-thumb img {
+    width: 100%;
+    height: 100%;
+    border: 0;
+    display: block;
+    object-fit: cover;
+    background: #f3f3f1;
+    transform: scale(1.02);
+  }
+
+  .work-link {
+    display: flex;
+    flex-direction: column;
+    height: 100%;
+    text-decoration: none;
+    color: inherit;
   }
 
   .work-thumb-1 { background: linear-gradient(135deg, #E8F0E9 0%, #C8D9C9 100%); }
@@ -624,7 +647,11 @@
 
   .work-info {
     background: var(--white);
-    padding: 1.3rem 1.4rem;
+    padding: 1.5rem 1.5rem 1.7rem;
+    display: flex;
+    flex-direction: column;
+    gap: 0.5rem;
+    flex: 1;
   }
 
   .work-tag {
@@ -633,12 +660,13 @@
     letter-spacing: 0.1em;
     color: var(--gold);
     font-weight: 500;
-    margin-bottom: 0.4rem;
+    margin-bottom: 0.1rem;
   }
 
   .work-title {
     font-family: var(--serif);
-    font-size: 1.2rem;
+    font-size: 1.45rem;
+    line-height: 1.2;
     font-weight: 400;
     color: var(--ink);
   }
@@ -993,7 +1021,7 @@
   <div class="about-grid">
     <div class="about-image-wrap">
       <div class="about-image-block">
-        <span class="about-initials">VG</span>
+        <img src="images/WhatsApp Image 2026-01-15 at 8.39.51 PM 1.jpeg" alt="Valere Mbaya portrait" style="width:100%; height:100%; object-fit:cover; display:block;" />
       </div>
       <div class="about-badge">
         <strong>3+</strong>
@@ -1177,10 +1205,10 @@
     <a href="#contact" class="btn-ghost" style="margin-bottom:0.5rem;">See all work</a>
   </div>
   <div class="works-grid">
-    <a href="https://bugi-c.vercel.app/" target="_blank" style="text-decoration: none;">
-      <div class="work-card">
+    <div class="work-card">
+      <a href="https://bugi-c.vercel.app/" target="_blank" rel="noopener noreferrer" class="work-link">
         <div class="work-thumb work-thumb-1">
-          <span class="work-thumb-text">BUGI BUILDERS</span>
+          <img src="images/Screenshot (1144).png" alt="Bugi Builders project preview" loading="lazy" />
         </div>
         <div class="work-info">
           <p class="work-tag">BUGI BUILDERS · Marketing Website</p>
@@ -1188,28 +1216,27 @@
         </div>
       </div>
     </a>
-     <a href="https://ib-s-spice-kitchen.vercel.app/" target="_blank" style="text-decoration: none;">
-       <div class="work-card">
+    <div class="work-card">
       <div class="work-thumb work-thumb-2">
-        <span class="work-thumb-text">SPICE KITCHEN</span>
+        <span class="work-thumb-text">Spice</span>
       </div>
       <div class="work-info">
         <p class="work-tag">Restaurant · Brand + Flier</p>
         <p class="work-title">Spice Garden Kitchen . <br> coming soon.</p>
       </div>
-     </a>
     </div>
-    <a href="https://trifort-builders-x8nu.vercel.app/" target="_blank" style="text-decoration: none;">
-      <div class="work-card">
+
+    <div class="work-card">
+      <a href="https://trifort-builders-x8nu.vercel.app/" target="_blank" rel="noopener noreferrer" class="work-link">
         <div class="work-thumb work-thumb-3">
-          <span class="work-thumb-text">TRI-FORT.</span>
+          <img src="images/Screenshot (1143).png" alt="Tri-Fort construction project preview" loading="lazy" />
         </div>
         <div class="work-info">
           <p class="work-tag">Construction · Web + App</p>
-          <p class="work-title">TR-FORT CONSTRUCTION.</p>
+          <p class="work-title">TRI-FORT CONSTRUCTION.</p>
         </div>
-      </div>
-    </a>
+      </a>
+    </div>
   </div>
 </section>
 
