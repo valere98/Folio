@@ -289,6 +289,13 @@
     position: relative;
   }
 
+  .about-image-block img {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    display: block;
+  }
+
   .about-image-block::after {
     content: '';
     position: absolute;
@@ -297,6 +304,7 @@
   }
 
   .about-initials {
+    display: none;
     font-family: var(--serif);
     font-size: 9rem;
     font-weight: 300;
@@ -1021,7 +1029,8 @@
   <div class="about-grid">
     <div class="about-image-wrap">
       <div class="about-image-block">
-        <img src="images/WhatsApp Image 2026-01-15 at 8.39.51 PM 1.jpeg" alt="Valere Mbaya portrait" style="width:100%; height:100%; object-fit:cover; display:block;" />
+        <img src="images/WhatsApp Image 2026-01-15 at 8.39.51 PM 1.jpeg" alt="Valere Mbaya portrait" />
+        <span class="about-initials">VG</span>
       </div>
       <div class="about-badge">
         <strong>3+</strong>
@@ -1212,24 +1221,27 @@
         </div>
         <div class="work-info">
           <p class="work-tag">BUGI BUILDERS · Marketing Website</p>
-          <p class="work-title">BUGI BUILDERS, DESIGN & ARCHITECTURE.</p>
+          <p class="work-title">BUGI BUILDERS, DESIGN &amp; ARCHITECTURE.</p>
         </div>
-      </div>
-    </a>
+      </a>
+    </div>
+
     <div class="work-card">
-      <div class="work-thumb work-thumb-2">
-        <span class="work-thumb-text">Spice</span>
-      </div>
-      <div class="work-info">
-        <p class="work-tag">Restaurant · Brand + Flier</p>
-        <p class="work-title">Spice Garden Kitchen . <br> coming soon.</p>
-      </div>
+      <a href="https://ib-s-spice-kitchen.vercel.app/" target="_blank" rel="noopener noreferrer" class="work-link">
+        <div class="work-thumb work-thumb-2">
+          <img src="images/Screenshot (1156).png" alt="Spice Kitchen project preview" loading="lazy" />
+        </div>
+        <div class="work-info">
+          <p class="work-tag">Restaurant · Brand + Flier</p>
+          <p class="work-title">Spice Kitchen | Modern Dining Experience.</p>
+        </div>
+      </a>
     </div>
 
     <div class="work-card">
       <a href="https://trifort-builders-x8nu.vercel.app/" target="_blank" rel="noopener noreferrer" class="work-link">
         <div class="work-thumb work-thumb-3">
-          <img src="images/Screenshot (1143).png" alt="Tri-Fort construction project preview" loading="lazy" />
+          <img src="images/Screenshot (1143).png" alt="Tri-Fort project preview" loading="lazy" />
         </div>
         <div class="work-info">
           <p class="work-tag">Construction · Web + App</p>
