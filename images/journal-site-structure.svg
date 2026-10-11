@@ -1,0 +1,15 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 720 410" role="img" aria-label="Layered cards representing a simple multi-page website">
+  <rect width="720" height="410" fill="#d5ef8c"/>
+  <circle cx="610" cy="96" r="154" fill="#b6d978"/>
+  <rect x="86" y="82" width="360" height="244" rx="12" fill="#fff" transform="rotate(-7 86 82)"/>
+  <rect x="111" y="112" width="307" height="22" rx="4" fill="#174b35" transform="rotate(-7 111 112)"/>
+  <rect x="110" y="164" width="136" height="120" rx="6" fill="#e9e5d9" transform="rotate(-7 110 164)"/>
+  <rect x="261" y="159" width="151" height="12" rx="6" fill="#a9c1ad" transform="rotate(-7 261 159)"/>
+  <rect x="267" y="186" width="125" height="9" rx="4" fill="#dce2dc" transform="rotate(-7 267 186)"/>
+  <rect x="271" y="208" width="130" height="9" rx="4" fill="#dce2dc" transform="rotate(-7 271 208)"/>
+  <rect x="276" y="230" width="102" height="9" rx="4" fill="#dce2dc" transform="rotate(-7 276 230)"/>
+  <rect x="484" y="171" width="151" height="190" rx="11" fill="#174b35" transform="rotate(8 484 171)"/>
+  <rect x="508" y="206" width="99" height="8" rx="4" fill="#d5ef8c" transform="rotate(8 508 206)"/>
+  <rect x="506" y="230" width="95" height="8" rx="4" fill="#fff" opacity=".72" transform="rotate(8 506 230)"/>
+  <rect x="502" y="254" width="78" height="8" rx="4" fill="#fff" opacity=".45" transform="rotate(8 502 254)"/>
+</svg>

@@ -1,0 +1,30 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<rss version="2.0">
+  <channel>
+    <title>Valere Mbaya Journal</title>
+    <link>/journal/</link>
+    <description>Build notes and practical reflections on design, accessibility, and making useful websites and software.</description>
+    <language>en</language>
+    <item>
+      <title>From one long page to a site with room to grow</title>
+      <link>/journal/from-one-page-to-a-small-site/</link>
+      <guid>/journal/from-one-page-to-a-small-site/</guid>
+      <pubDate>Sun, 11 Oct 2026 00:00:00 +0000</pubDate>
+      <description>A practical look at turning a static single page portfolio into a small set of useful, connected pages.</description>
+    </item>
+    <item>
+      <title>A more honest way to present project work</title>
+      <link>/journal/honest-project-case-studies/</link>
+      <guid>/journal/honest-project-case-studies/</guid>
+      <pubDate>Sun, 11 Oct 2026 00:00:00 +0000</pubDate>
+      <description>How to make a portfolio useful when project details are not fully documented.</description>
+    </item>
+    <item>
+      <title>A small color contrast checker, and what it can’t tell you</title>
+      <link>/journal/a-small-color-contrast-checker/</link>
+      <guid>/journal/a-small-color-contrast-checker/</guid>
+      <pubDate>Sun, 11 Oct 2026 00:00:00 +0000</pubDate>
+      <description>Relative luminance, contrast ratios, and why one passing score is not an accessibility audit.</description>
+    </item>
+  </channel>
+</rss>

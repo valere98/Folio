@@ -1,0 +1,16 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 720 410" role="img" aria-label="Dark green and lime color swatches with a contrast ratio motif">
+  <rect width="720" height="410" fill="#174b35"/>
+  <circle cx="568" cy="90" r="176" fill="#285f45"/>
+  <rect x="104" y="83" width="245" height="245" rx="16" fill="#d5ef8c"/>
+  <rect x="371" y="83" width="245" height="245" rx="16" fill="#103725" stroke="#d5ef8c" stroke-width="2"/>
+  <path d="M355 153v105" stroke="#fff" stroke-linecap="round" stroke-width="3" opacity=".65"/>
+  <path d="M337 170l18-18 18 18M337 241l18 18 18-18" fill="none" stroke="#fff" stroke-linecap="round" stroke-linejoin="round" stroke-width="3"/>
+  <rect x="142" y="139" width="169" height="17" rx="8" fill="#174b35"/>
+  <rect x="142" y="173" width="130" height="10" rx="5" fill="#174b35" opacity=".75"/>
+  <rect x="142" y="198" width="150" height="10" rx="5" fill="#174b35" opacity=".5"/>
+  <rect x="409" y="139" width="169" height="17" rx="8" fill="#d5ef8c"/>
+  <rect x="409" y="173" width="130" height="10" rx="5" fill="#d5ef8c" opacity=".75"/>
+  <rect x="409" y="198" width="150" height="10" rx="5" fill="#d5ef8c" opacity=".5"/>
+  <circle cx="226" cy="267" r="12" fill="#174b35"/>
+  <circle cx="493" cy="267" r="12" fill="#d5ef8c"/>
+</svg>

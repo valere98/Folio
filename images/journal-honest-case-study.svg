@@ -1,0 +1,17 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 720 410" role="img" aria-label="A clear glass-like frame with verified details and open questions">
+  <rect width="720" height="410" fill="#e9e5d9"/>
+  <circle cx="564" cy="94" r="156" fill="#d5ef8c"/>
+  <rect x="116" y="72" width="440" height="274" rx="15" fill="#fff" stroke="#174b35" stroke-width="2"/>
+  <rect x="116" y="72" width="440" height="43" rx="15" fill="#174b35"/>
+  <circle cx="142" cy="94" r="5" fill="#d5ef8c"/>
+  <circle cx="162" cy="94" r="5" fill="#b6d978"/>
+  <circle cx="182" cy="94" r="5" fill="#fff" opacity=".7"/>
+  <rect x="152" y="145" width="112" height="146" rx="7" fill="#dce7df"/>
+  <rect x="284" y="147" width="231" height="15" rx="7" fill="#174b35"/>
+  <rect x="284" y="179" width="194" height="9" rx="4" fill="#a9c1ad"/>
+  <rect x="284" y="202" width="209" height="9" rx="4" fill="#a9c1ad"/>
+  <rect x="284" y="225" width="174" height="9" rx="4" fill="#a9c1ad"/>
+  <rect x="284" y="264" width="104" height="27" rx="13" fill="#d5ef8c"/>
+  <path d="M201 212l22 22 42-50" fill="none" stroke="#174b35" stroke-linecap="round" stroke-linejoin="round" stroke-width="9"/>
+  <path d="M611 272v60m-30-30h60" stroke="#174b35" stroke-linecap="round" stroke-width="7"/>
+</svg>
