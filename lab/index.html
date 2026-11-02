@@ -2,7 +2,7 @@
 <html lang="en">
 <head>
   <meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1"><meta name="theme-color" content="#f5f5f0">
-  <meta name="description" content="Try a small color contrast checker in your browser and explore practical web experiments by Valere Mbaya.">
+  <meta name="description" content="Explore browser-based accessibility tools, writing experiments, interactive visualizations, and generative art in the Valere Mbaya digital lab.">
   <title>Lab | Valere Mbaya</title><link rel="stylesheet" href="/assets/site.css"><script src="/assets/site.js" defer></script>
 </head>
 <body>
@@ -12,26 +12,494 @@
     <ul class="nav-menu" id="primary-menu"><li><a href="/about/">About</a></li><li><a href="/projects/">Projects</a></li><li><a href="/journal/">Journal</a></li><li><a href="/lab/" aria-current="page">Lab</a></li><li><a href="/services/">Services</a></li><li><a class="nav-contact" href="/contact/">Let’s talk ↗</a></li></ul>
   </nav></header>
   <main id="main">
-    <section class="page-hero"><div class="container"><p class="breadcrumbs"><a href="/">Home</a> / Lab</p><p class="eyebrow">Small tools · Real questions</p><h1>A place to try things.</h1><p class="lede">A practical collection of small experiments. First up: a color contrast check you can use while choosing a text and background pair.</p></div></section>
+    <section class="page-hero"><div class="container"><p class="breadcrumbs"><a href="/">Home</a> / Lab</p><p class="eyebrow">Experiments · Ideas in progress</p><h1>Curiosity, put to work.</h1><p class="lede">A collection of small tools, creative experiments, and ideas I’m exploring through code. Some solve everyday problems. Others exist to test what’s possible. All are built to be explored.</p></div></section>
     <section class="section"><div class="container">
-      <div class="section-heading"><div><p class="eyebrow">Interactive tool</p><h2>Color contrast checker</h2></div><p>Runs in your browser using the selected sRGB colors. No color values are sent anywhere.</p></div>
+      <div class="section-heading"><div><p class="eyebrow">Live · Interactive tool</p><h2>Color contrast checker</h2></div><p>Runs in your browser using the selected sRGB colors. No color values are sent anywhere.</p></div>
       <div class="tool-card">
         <div class="tool-fields">
-          <div class="tool-field"><label for="foreground">Text color</label><input id="foreground" type="color" value="#174b35"></div>
-          <div class="tool-field"><label for="background">Background color</label><input id="background" type="color" value="#d5ef8c"></div>
+          <div class="tool-field"><label for="foreground-hex">Text color</label><div class="tool-field-controls"><input id="foreground" type="color" value="#174b35" aria-label="Pick text color"><input class="tool-hex-input" id="foreground-hex" type="text" value="#174B35" maxlength="7" spellcheck="false" autocomplete="off" aria-label="Text color hex value" aria-describedby="foreground-hex-error"><span class="tool-field-error" id="foreground-hex-error" hidden>Enter a 6-digit hex value, such as #174B35.</span></div></div>
+          <div class="tool-field"><label for="background-hex">Background color</label><div class="tool-field-controls"><input id="background" type="color" value="#d5ef8c" aria-label="Pick background color"><input class="tool-hex-input" id="background-hex" type="text" value="#D5EF8C" maxlength="7" spellcheck="false" autocomplete="off" aria-label="Background color hex value" aria-describedby="background-hex-error"><span class="tool-field-error" id="background-hex-error" hidden>Enter a 6-digit hex value, such as #D5EF8C.</span></div></div>
         </div>
-        <div class="tool-result" aria-live="polite">
-          <strong id="contrast-ratio">Calculating…</strong>
-          <p id="contrast-status" data-state="pending">Choose colors to see their contrast ratio.</p>
-          <div class="tool-sample" id="contrast-sample" style="margin-top:18px;padding:20px;border-radius:4px;color:#174b35;background:#d5ef8c">
+        <div class="tool-result" aria-live="polite" aria-atomic="true">
+          <div class="tool-result-heading"><span>Contrast ratio</span><strong id="contrast-ratio">Calculating…</strong></div>
+          <div class="tool-checks">
+            <p class="tool-check" id="contrast-normal" data-state="pending"><span>Normal text<small>AA · 4.5:1</small></span><strong id="contrast-normal-result">Checking</strong></p>
+            <p class="tool-check" id="contrast-large" data-state="pending"><span>Large text<small>AA · 3:1</small></span><strong id="contrast-large-result">Checking</strong></p>
+          </div>
+          <div class="tool-sample" id="contrast-sample">
             <strong>Sample text</strong>
-            <p style="margin:5px 0 0">Check how this text pair looks before using it.</p>
-            <div class="tool-swatch-row" aria-label="Selected color swatches"><span class="tool-swatch" title="Text color"></span><span class="tool-swatch" title="Background color"></span></div>
+            <p>Check how this text pair looks before using it.</p>
+            <p class="tool-sample-large">Large sample text (24px)</p>
           </div>
         </div>
         <p class="pricing-footnote">WCAG AA reference thresholds: 4.5:1 for normal text and 3:1 for large text. This quick check does not evaluate the rest of an interface or replace assistive technology testing.</p>
       </div>
       <p style="margin-top:28px"><a class="text-link" href="/journal/a-small-color-contrast-checker/">How the checker works and its limits ↗</a></p>
+    </div></section>
+    <section class="section atmosphere-section" aria-labelledby="atmosphere-title">
+      <div class="container">
+        <div class="section-heading">
+          <div><p class="eyebrow">Live · Creative coding experiment</p><h2 id="atmosphere-title">Atmosphere Studio</h2></div>
+          <p>Make a living composition from motion, form, and a little unpredictability. Move your pointer through the canvas and see what happens.</p>
+        </div>
+        <div class="atmosphere-studio" data-atmosphere-studio>
+          <div class="atmosphere-stage">
+            <div class="atmosphere-stage-top">
+              <span><i aria-hidden="true"></i> YOUR CANVAS</span>
+              <span data-art-seed>SEED 01923</span>
+            </div>
+            <canvas class="atmosphere-canvas" data-art-canvas role="img" aria-label="Animated generative artwork. Move your pointer over the canvas to influence the forms."></canvas>
+            <p class="atmosphere-canvas-hint" aria-hidden="true">Move through the field to leave a trace</p>
+            <div class="atmosphere-stage-bottom">
+              <span data-art-status aria-live="polite">A new composition is taking shape.</span>
+              <span>MADE IN YOUR BROWSER</span>
+            </div>
+          </div>
+          <aside class="atmosphere-controls" aria-label="Artwork controls">
+            <div class="atmosphere-control-heading">
+              <div><p class="atmosphere-kicker">01 · VISUAL WORLD</p><h3>Choose a motion</h3></div>
+            </div>
+            <div class="atmosphere-modes" role="group" aria-label="Artwork mode">
+              <button type="button" class="atmosphere-mode is-active" data-art-mode="flow" aria-pressed="true"><span aria-hidden="true">〰</span> Flow</button>
+              <button type="button" class="atmosphere-mode" data-art-mode="particles" aria-pressed="false"><span aria-hidden="true">⁙</span> Particles</button>
+              <button type="button" class="atmosphere-mode" data-art-mode="orbit" aria-pressed="false"><span aria-hidden="true">◎</span> Orbit</button>
+            </div>
+            <p class="atmosphere-control-description" data-art-mode-description>Silk-like paths drift through an invisible field.</p>
+            <div class="atmosphere-sliders">
+              <div class="atmosphere-slider">
+                <label for="art-density">Density <output data-art-value="density" for="art-density">240</output></label>
+                <input id="art-density" data-art-control="density" type="range" min="80" max="420" step="20" value="240">
+                <div class="atmosphere-range-labels"><span>Open</span><span>Dense</span></div>
+              </div>
+              <div class="atmosphere-slider">
+                <label for="art-motion">Motion <output data-art-value="motion" for="art-motion">45</output></label>
+                <input id="art-motion" data-art-control="motion" type="range" min="10" max="100" step="1" value="45">
+                <div class="atmosphere-range-labels"><span>Still</span><span>Energetic</span></div>
+              </div>
+              <div class="atmosphere-slider">
+                <label for="art-complexity">Complexity <output data-art-value="complexity" for="art-complexity">55</output></label>
+                <input id="art-complexity" data-art-control="complexity" type="range" min="10" max="100" step="1" value="55">
+                <div class="atmosphere-range-labels"><span>Simple</span><span>Intricate</span></div>
+              </div>
+              <div class="atmosphere-slider">
+                <label for="art-trails">Trail length <output data-art-value="trails" for="art-trails">70</output></label>
+                <input id="art-trails" data-art-control="trails" type="range" min="10" max="100" step="1" value="70">
+                <div class="atmosphere-range-labels"><span>Short</span><span>Long</span></div>
+              </div>
+            </div>
+            <div class="atmosphere-interaction">
+              <label for="art-interaction">Pointer energy</label>
+              <select id="art-interaction" data-art-interaction>
+                <option value="attract">Draw elements in</option>
+                <option value="repel">Push elements away</option>
+                <option value="none">No influence</option>
+              </select>
+            </div>
+            <div class="atmosphere-actions">
+              <button class="atmosphere-button atmosphere-button-primary" type="button" data-art-action="randomize"><span aria-hidden="true">↻</span> Randomize</button>
+              <button class="atmosphere-button" type="button" data-art-action="pause" aria-pressed="false">Pause</button>
+              <button class="atmosphere-button" type="button" data-art-action="clear">Clear canvas</button>
+              <button class="atmosphere-button" type="button" data-art-action="snapshot">Save PNG ↓</button>
+              <button class="atmosphere-reset" type="button" data-art-action="reset">Reset to starting point</button>
+            </div>
+          </aside>
+        </div>
+        <details class="atmosphere-how">
+          <summary>How the artwork works</summary>
+          <p>Each mark follows a changing vector field: a grid of directions shaped by simple waves. Your pointer adds a local force, while the controls tune how many marks move, how quickly they travel, and how long each trace remains. Randomize changes the starting seed; the same seed and settings recreate the same system.</p>
+        </details>
+      </div>
+    </section>
+    <section class="type-intro-section" aria-labelledby="type-intro-title">
+      <div class="container type-intro">
+        <div class="type-intro-copy">
+          <p class="eyebrow">01 / A study in letters and time</p>
+          <h2 id="type-intro-title">Type<br><em>in motion.</em></h2>
+          <p>Letters have weight. Space has rhythm. Motion has a mood. Change one thing, watch what shifts, and make a composition that says what you mean.</p>
+          <a class="type-text-link" href="#type-playground">Make something move <span aria-hidden="true">↓</span></a>
+        </div>
+        <div class="type-intro-art" aria-hidden="true">
+          <span class="type-intro-index">TYPE STUDY — 01</span>
+          <span class="type-intro-word">WORDS<br>IN<br>ORBIT<span>.</span></span>
+          <span class="type-intro-caption">A small experiment in expression<br>and the space between letters.</span>
+          <span class="type-intro-cross">✳</span>
+        </div>
+      </div>
+    </section>
+    <section class="section type-playground-section" id="type-playground" aria-labelledby="type-playground-title">
+      <div class="container">
+        <div class="section-heading">
+          <div><p class="eyebrow">02 / The playground</p><h2 id="type-playground-title">Make the words move.</h2></div>
+          <p>Start with a phrase or write your own. Every setting changes the feeling, not just the appearance.</p>
+        </div>
+        <div class="type-workspace" data-type-studio>
+          <div class="type-editor">
+            <div class="type-editor-top">
+              <span>LIVE SPECIMEN</span>
+              <span data-type-mode-label>01 / FLOW</span>
+            </div>
+            <div class="type-preview-wrap" data-type-preview-wrap>
+              <div class="type-preview" data-type-preview role="img" aria-label="Animated typography preview">
+                <span class="type-preview-sr" data-type-preview-sr>Make it move.</span>
+                <span class="type-preview-lines" data-type-preview-lines aria-hidden="true"></span>
+              </div>
+              <span class="type-preview-edition">TYPE / TIME / 2026</span>
+              <span class="type-preview-corner" aria-hidden="true">✳</span>
+            </div>
+            <div class="type-editor-footer">
+              <p data-type-principle aria-live="polite">Flow uses continuity and direction to make a phrase feel smooth.</p>
+              <span>TEXT STAYS SELECTABLE</span>
+            </div>
+          </div>
+          <aside class="type-controls" aria-label="Typography playground controls">
+            <div class="type-controls-heading">
+              <div><p class="type-control-kicker">YOUR COMPOSITION</p><h3>Set the tone.</h3></div>
+              <button class="type-utility-button" type="button" data-type-action="randomize">Randomize ↗</button>
+            </div>
+            <div class="type-text-field">
+              <label for="type-text-input">Your words <span><output data-type-count for="type-text-input">13</output> / 48</span></label>
+              <textarea id="type-text-input" data-type-text maxlength="48" rows="2" aria-describedby="type-text-help">Make it move.</textarea>
+              <div class="type-phrase-row"><label for="type-phrase">Or begin with</label><select id="type-phrase" data-type-phrase><option value="">Choose a phrase…</option><option>Make it move.</option><option>Find your rhythm</option><option>Stay curious</option><option>Take up space</option></select></div>
+              <span id="type-text-help" class="type-help-text">Short phrases make expressive motion easier to read.</span>
+            </div>
+            <div class="type-tabs" role="tablist" aria-label="Composition controls">
+              <button type="button" role="tab" id="type-tab-typography" aria-controls="type-panel-typography" aria-selected="true" tabindex="0" data-type-tab="typography">Type</button>
+              <button type="button" role="tab" id="type-tab-motion" aria-controls="type-panel-motion" aria-selected="false" tabindex="-1" data-type-tab="motion">Motion</button>
+              <button type="button" role="tab" id="type-tab-appearance" aria-controls="type-panel-appearance" aria-selected="false" tabindex="-1" data-type-tab="appearance">Surface</button>
+            </div>
+            <div class="type-tab-panel" id="type-panel-typography" role="tabpanel" aria-labelledby="type-tab-typography" data-type-panel="typography">
+              <div class="type-control-row">
+                <label for="type-font">Typeface</label>
+                <select id="type-font" data-type-setting="font"><option value="display">Manrope · geometric</option><option value="serif">Georgia · editorial</option><option value="sans">Arial · neutral</option><option value="mono">Courier · technical</option></select>
+              </div>
+              <div class="type-control-row">
+                <label for="type-weight">Weight <output data-type-value="weight">800</output></label>
+                <input id="type-weight" data-type-setting="weight" type="range" min="300" max="900" step="100" value="800">
+              </div>
+              <div class="type-control-row">
+                <label for="type-size">Size <output data-type-value="size">clamp</output></label>
+                <input id="type-size" data-type-setting="size" type="range" min="28" max="112" step="1" value="72">
+              </div>
+              <div class="type-control-row">
+                <label for="type-leading">Line height <output data-type-value="leading">0.92</output></label>
+                <input id="type-leading" data-type-setting="leading" type="range" min="70" max="150" step="1" value="92">
+              </div>
+              <div class="type-control-row">
+                <label for="type-tracking">Letter spacing <output data-type-value="tracking">−2</output></label>
+                <input id="type-tracking" data-type-setting="tracking" type="range" min="-8" max="16" step="1" value="-2">
+              </div>
+              <div class="type-control-row">
+                <label for="type-word-spacing">Word spacing <output data-type-value="word-spacing">0</output></label>
+                <input id="type-word-spacing" data-type-setting="word-spacing" type="range" min="-2" max="24" step="1" value="0">
+              </div>
+              <fieldset class="type-alignment">
+                <legend>Alignment</legend>
+                <button type="button" data-type-align="left" aria-pressed="false">Left</button><button type="button" data-type-align="center" aria-pressed="true">Center</button><button type="button" data-type-align="right" aria-pressed="false">Right</button>
+              </fieldset>
+              <label class="type-emphasis-toggle"><input type="checkbox" data-type-emphasis><span>Make the first line the hero</span></label>
+            </div>
+            <div class="type-tab-panel" id="type-panel-motion" role="tabpanel" aria-labelledby="type-tab-motion" data-type-panel="motion" hidden>
+              <fieldset class="type-motion-choices">
+                <legend>Choose a behavior</legend>
+                <button type="button" data-type-mode="flow" aria-pressed="true"><span>01</span> Flow</button>
+                <button type="button" data-type-mode="bounce" aria-pressed="false"><span>02</span> Bounce</button>
+                <button type="button" data-type-mode="scatter" aria-pressed="false"><span>03</span> Scatter</button>
+                <button type="button" data-type-mode="wave" aria-pressed="false"><span>04</span> Wave</button>
+              </fieldset>
+              <p class="type-mode-note" data-type-mode-note>Letters travel together: continuity creates a calm, readable rhythm.</p>
+              <div class="type-control-row">
+                <label for="type-speed">Speed <output data-type-value="speed">5.0s</output></label>
+                <input id="type-speed" data-type-setting="speed" type="range" min="2" max="12" step="0.5" value="5">
+              </div>
+              <div class="type-control-row">
+                <label for="type-intensity">Intensity <output data-type-value="intensity">50</output></label>
+                <input id="type-intensity" data-type-setting="intensity" type="range" min="0" max="100" step="1" value="50">
+              </div>
+              <div class="type-control-row">
+                <label for="type-stagger">Stagger <output data-type-value="stagger">80ms</output></label>
+                <input id="type-stagger" data-type-setting="stagger" type="range" min="0" max="240" step="10" value="80">
+              </div>
+              <div class="type-control-row">
+                <label for="type-easing">Easing</label>
+                <select id="type-easing" data-type-setting="easing"><option value="ease-in-out">Ease in · ease out</option><option value="linear">Linear</option><option value="cubic-bezier(.2,.8,.2,1)">Soft landing</option></select>
+              </div>
+              <div class="type-control-row">
+                <label for="type-direction">Direction</label>
+                <select id="type-direction" data-type-setting="direction"><option value="1">Forward</option><option value="-1">Reverse</option></select>
+              </div>
+            </div>
+            <div class="type-tab-panel" id="type-panel-appearance" role="tabpanel" aria-labelledby="type-tab-appearance" data-type-panel="appearance" hidden>
+              <div class="type-control-row type-color-row">
+                <label for="type-ink">Ink color</label><input id="type-ink" data-type-setting="ink" type="color" value="#14251c">
+              </div>
+              <div class="type-control-row type-color-row">
+                <label for="type-paper">Paper color</label><input id="type-paper" data-type-setting="paper" type="color" value="#d5ef8c">
+              </div>
+              <div class="type-control-row">
+                <label for="type-width">Composition width <output data-type-value="width">88%</output></label>
+                <input id="type-width" data-type-setting="width" type="range" min="45" max="100" step="1" value="88">
+              </div>
+              <div class="type-control-row">
+                <label for="type-padding">Negative space <output data-type-value="padding">48px</output></label>
+                <input id="type-padding" data-type-setting="padding" type="range" min="12" max="96" step="2" value="48">
+              </div>
+              <p class="type-mode-note">Contrast and empty space are part of the composition. Try a quiet ground before adding more motion.</p>
+            </div>
+            <div class="type-global-actions">
+              <button class="type-action-primary" type="button" data-type-action="play" aria-pressed="false"><span aria-hidden="true">Ⅱ</span> Pause motion</button>
+              <button class="type-action-secondary" type="button" data-type-action="reset">Reset</button>
+              <label class="type-reduced-motion"><input type="checkbox" data-type-reduced-motion><span>Reduced motion</span></label>
+            </div>
+            <p class="type-status" data-type-status aria-live="polite">Choose a mode and notice how the letters behave.</p>
+          </aside>
+        </div>
+      </div>
+    </section>
+    <section class="section type-learning-section" aria-labelledby="type-learning-title">
+      <div class="container">
+        <div class="section-heading">
+          <div><p class="eyebrow">03 / Learning lab</p><h2 id="type-learning-title">Change one thing.<br><em>Notice the difference.</em></h2></div>
+          <p>These are observations, not rules. Context, language, typeface, and audience all change what feels right.</p>
+        </div>
+        <div class="type-lesson-list">
+          <article class="type-lesson">
+            <div class="type-lesson-number">01</div>
+            <div class="type-lesson-copy"><h3>Spacing changes personality.</h3><p>Tracking changes the density and rhythm of a word. Tight spacing can feel compact; generous spacing can feel open, but too much may slow recognition.</p><span>TRY IT · TRACKING</span></div>
+            <div class="type-lesson-demo">
+              <p class="type-lesson-sample" data-lesson-tracking>STAY CURIOUS</p>
+              <label for="lesson-tracking">Move the letters <output data-lesson-value="tracking">2px</output></label>
+              <input id="lesson-tracking" data-lesson-control="tracking" type="range" min="-3" max="14" value="2">
+            </div>
+          </article>
+          <article class="type-lesson">
+            <div class="type-lesson-number">02</div>
+            <div class="type-lesson-copy"><h3>Make the important word stand out.</h3><p>Hierarchy helps someone decide where to look first. Compare a uniform line with one word given more size and weight.</p><span>TRY IT · HIERARCHY</span></div>
+            <div class="type-lesson-demo type-hierarchy-demo" data-lesson-hierarchy data-state="flat">
+              <p><span>MAKE</span> <strong>SPACE</strong> <span>FOR</span> <span>IDEAS</span></p>
+              <button type="button" data-lesson-action="hierarchy" aria-pressed="false">Emphasize “SPACE”</button>
+            </div>
+          </article>
+          <article class="type-lesson">
+            <div class="type-lesson-number">03</div>
+            <div class="type-lesson-copy"><h3>Why some motion feels natural.</h3><p>Linear movement changes at a constant rate. Easing changes speed over time, which can feel softer or more deliberate. Neither is always better.</p><span>TRY IT · TIMING</span></div>
+            <div class="type-lesson-demo">
+              <div class="type-timing-track"><span data-lesson-timing-dot></span></div>
+              <button type="button" data-lesson-action="timing" data-easing="linear" aria-pressed="false">Compare linear / eased</button>
+              <p class="type-lesson-feedback" data-lesson-timing-feedback>Watch how the start and stop affect the perceived weight.</p>
+            </div>
+          </article>
+          <article class="type-lesson">
+            <div class="type-lesson-number">04</div>
+            <div class="type-lesson-copy"><h3>Expression has a reading cost.</h3><p>Motion can bring attention to a short headline. Apply the same movement to longer text and it may compete with reading. Use only as much as the context can support.</p><span>TRY IT · READABILITY</span></div>
+            <div class="type-lesson-demo">
+              <p class="type-reading-sample" data-lesson-reading>Words are easier to follow when movement has a clear purpose.</p>
+              <button type="button" data-lesson-action="readability" aria-pressed="false">Add expressive motion</button>
+            </div>
+          </article>
+        </div>
+      </div>
+    </section>
+    <section class="section type-challenges-section" aria-labelledby="type-challenges-title">
+      <div class="container">
+        <div class="section-heading">
+          <div><p class="eyebrow">04 / Creative challenges</p><h2 id="type-challenges-title">Can you create the right mood?</h2></div>
+          <p>Choose a brief, then use the playground to explore. These are prompts, not tests: there is no single correct composition.</p>
+        </div>
+        <div class="type-challenge-grid">
+          <article class="type-challenge">
+            <span class="type-challenge-index">CHALLENGE 01</span><h3>Make it feel energetic.</h3>
+            <p>Create a composition for <strong>MOVE</strong> with noticeable movement, a readable word, and a clear rhythm.</p>
+            <button type="button" data-type-challenge="energetic">Try this brief ↗</button>
+            <details><summary>What to notice</summary><p>Can you feel the energy without losing the word? Try Bounce or Wave, then adjust intensity and stagger.</p></details>
+          </article>
+          <article class="type-challenge">
+            <span class="type-challenge-index">CHALLENGE 02</span><h3>Make it feel calm.</h3>
+            <p>Use restrained motion and generous space to make <strong>TAKE A BREATH</strong> feel unhurried.</p>
+            <button type="button" data-type-challenge="calm">Try this brief ↗</button>
+            <details><summary>What to notice</summary><p>Does the movement support the phrase or compete with it? Try Flow at a slower speed and leave room around the words.</p></details>
+          </article>
+          <article class="type-challenge">
+            <span class="type-challenge-index">CHALLENGE 03</span><h3>Give one word the stage.</h3>
+            <p>Build a clear hierarchy around <strong>BEGIN</strong> with a smaller supporting phrase.</p>
+            <button type="button" data-type-challenge="hero">Try this brief ↗</button>
+            <details><summary>What to notice</summary><p>Can someone find the main message at a glance? Change size, weight, tracking, and alignment one at a time.</p></details>
+          </article>
+        </div>
+        <p class="type-challenge-status" data-type-challenge-status aria-live="polite"></p>
+      </div>
+    </section>
+    <section class="section type-export-section" aria-labelledby="type-export-title">
+      <div class="container type-export">
+        <div>
+          <p class="eyebrow">05 / Take it with you</p><h2 id="type-export-title">Save your<br><em>creation.</em></h2>
+          <p>The poster is rendered on this device. Copy the core CSS settings, or share a link that restores your current starting point.</p>
+        </div>
+        <div class="type-export-actions">
+          <label for="type-poster-format">Poster format</label>
+          <select id="type-poster-format" data-type-poster-format><option value="portrait">Portrait · 1080 × 1350</option><option value="landscape">Landscape · 1350 × 1080</option></select>
+          <button type="button" data-type-action="poster">Download poster PNG ↓</button>
+          <button type="button" data-type-action="copy-css">Copy CSS settings</button>
+          <button type="button" data-type-action="share">Copy share link ↗</button>
+          <p data-type-export-status aria-live="polite">No account needed. Your text and settings stay in this browser.</p>
+        </div>
+      </div>
+    </section>
+    <section class="section clarity-lab-section" aria-labelledby="clarity-lab-title">
+      <div class="container">
+        <div class="section-heading">
+          <div><p class="eyebrow">Live · Browser prototype</p><h2 id="clarity-lab-title">Clarity Lab</h2></div>
+          <p>AI meets practical UX: a writing experiment that turns complicated text into something easier to understand.</p>
+        </div>
+        <div class="clarity-shell" data-clarity-lab>
+          <div class="clarity-banner">
+            <div class="clarity-orb" aria-hidden="true"><span>Cl</span></div>
+            <div><p class="clarity-eyebrow">A little more clarity</p><h3>Say it so it makes sense.</h3><p>Make a message simpler, shorter, or easier to scan.</p></div>
+            <span class="clarity-private"><span aria-hidden="true"></span> STAYS IN YOUR BROWSER</span>
+          </div>
+          <div class="clarity-workspace">
+            <section class="clarity-panel clarity-input-panel" aria-labelledby="clarity-input-title">
+              <div class="clarity-panel-heading">
+                <div><p class="clarity-step">01 · YOUR TEXT</p><h3 id="clarity-input-title">Start with a draft</h3></div>
+                <button class="clarity-text-button" type="button" data-clarity-example>Try an example</button>
+              </div>
+              <label class="clarity-label" for="clarity-input">Paste or type something you want to clarify</label>
+              <textarea id="clarity-input" data-clarity-input maxlength="5000" placeholder="Paste an email, a note, or a complicated paragraph…" aria-describedby="clarity-input-help clarity-input-count"></textarea>
+              <div class="clarity-field-meta"><span id="clarity-input-help">Your text is processed on this device.</span><span id="clarity-input-count"><strong data-clarity-count>0</strong> / 5,000</span></div>
+              <div class="clarity-options">
+                <fieldset class="clarity-mode-field">
+                  <legend class="clarity-label">What would help?</legend>
+                  <div class="clarity-mode-list">
+                    <button class="clarity-mode is-active" type="button" data-clarity-mode="simplify" aria-pressed="true"><span aria-hidden="true">✳</span> Simplify</button>
+                    <button class="clarity-mode" type="button" data-clarity-mode="summarize" aria-pressed="false"><span aria-hidden="true">↘</span> Summarize</button>
+                    <button class="clarity-mode" type="button" data-clarity-mode="bullets" aria-pressed="false"><span aria-hidden="true">☷</span> Make bullets</button>
+                  </div>
+                </fieldset>
+                <div class="clarity-tone-field">
+                  <label class="clarity-label" for="clarity-tone">Tone</label>
+                  <select id="clarity-tone" data-clarity-tone>
+                    <option value="clear">Clear and simple</option>
+                    <option value="warm">Warm and friendly</option>
+                    <option value="professional">Professional</option>
+                  </select>
+                </div>
+              </div>
+              <div class="clarity-actions">
+                <button class="clarity-run" type="button" data-clarity-run><span aria-hidden="true">✦</span> Make it clearer</button>
+                <button class="clarity-clear" type="button" data-clarity-clear>Clear text</button>
+              </div>
+              <p class="clarity-status" data-clarity-status aria-live="polite">A browser-based prototype: it uses simple writing rules, not an AI service.</p>
+            </section>
+            <section class="clarity-panel clarity-output-panel" aria-labelledby="clarity-output-title">
+              <div class="clarity-panel-heading">
+                <div><p class="clarity-step">02 · YOUR RESULT</p><h3 id="clarity-output-title">A clearer version</h3></div>
+                <span class="clarity-result-spark" aria-hidden="true">✦</span>
+              </div>
+              <div class="clarity-output" data-clarity-output aria-live="polite" aria-atomic="true">
+                <p class="clarity-output-placeholder">Your rewrite will show up here. Choose an option, then make it clearer.</p>
+              </div>
+              <div class="clarity-output-footer">
+                <span data-clarity-result-meta>Ready when you are</span>
+                <button class="clarity-copy" type="button" data-clarity-copy disabled><span aria-hidden="true">▢</span> Copy result</button>
+              </div>
+              <p class="clarity-disclaimer">Rule-based demo only. It can miss context or change nuance, so review every suggestion before using it.</p>
+            </section>
+          </div>
+        </div>
+      </div>
+    </section>
+    <section class="section signal-garden-section" aria-labelledby="signal-garden-title">
+      <div class="container">
+        <div class="section-heading">
+          <div><p class="eyebrow">Live · Interactive experiment</p><h2 id="signal-garden-title">Signal Garden</h2></div>
+          <p>A distinctive visual experiment in connected ideas. Explore the network, follow a thread, or make a connection of your own.</p>
+        </div>
+        <div class="garden-intro">
+          <p>An interactive network of connected ideas. Add nodes, draw connections, move points, and watch the system reorganize.</p>
+          <p>Signal Garden explores data visualization, graph logic, and interactive systems.</p>
+        </div>
+        <div class="garden-layout" data-signal-garden>
+          <div class="garden-stage">
+            <div class="garden-stage-header">
+              <div class="garden-brand"><span class="garden-mark" aria-hidden="true">s</span><span>signal garden</span></div>
+              <span class="garden-live"><span aria-hidden="true"></span> LIVE NETWORK</span>
+            </div>
+            <div class="garden-visual">
+              <svg class="garden-svg" viewBox="0 0 800 600" role="group" aria-labelledby="garden-svg-title garden-svg-description">
+                <title id="garden-svg-title">Signal Garden idea network</title>
+                <desc id="garden-svg-description">An interactive map of ideas. Select a point to explore it, or use the controls to connect, filter, and rearrange the network.</desc>
+                <defs>
+                  <pattern id="garden-dots" width="24" height="24" patternUnits="userSpaceOnUse"><circle cx="1" cy="1" r="1" fill="#80909a" opacity=".3"></circle></pattern>
+                  <radialGradient id="garden-glow"><stop offset="0" stop-color="#253038" stop-opacity=".85"></stop><stop offset="1" stop-color="#10151b" stop-opacity="0"></stop></radialGradient>
+                  <linearGradient id="garden-link-gradient" x1="0" y1="0" x2="1" y2="1"><stop offset="0" stop-color="#f6a63b"></stop><stop offset=".5" stop-color="#d65ca5"></stop><stop offset="1" stop-color="#7ed6bd"></stop></linearGradient>
+                  <filter id="garden-node-glow" x="-100%" y="-100%" width="300%" height="300%"><feGaussianBlur stdDeviation="5" result="blur"></feGaussianBlur><feMerge><feMergeNode in="blur"></feMergeNode><feMergeNode in="SourceGraphic"></feMergeNode></feMerge></filter>
+                </defs>
+                <rect width="800" height="600" fill="url(#garden-glow)"></rect>
+                <rect width="800" height="600" fill="url(#garden-dots)"></rect>
+                <g data-garden-links aria-hidden="true"></g>
+                <g data-garden-nodes></g>
+              </svg>
+              <p class="garden-no-script">Turn on JavaScript to explore the live network.</p>
+            </div>
+            <div class="garden-stage-footer">
+              <p data-garden-selection aria-live="polite">Select a node to explore its connections.</p>
+              <div class="garden-counts"><span><strong data-garden-node-count>0</strong> nodes</span><span><strong data-garden-link-count>0</strong> links</span></div>
+            </div>
+          </div>
+          <aside class="garden-controls" aria-label="Signal Garden controls">
+            <div class="garden-control-heading"><div><p class="garden-kicker">Explore</p><h3>Shape the network</h3></div><span class="garden-count-badge"><strong data-garden-node-count>0</strong> NODES</span></div>
+            <form class="garden-add-form" data-garden-form>
+              <label for="garden-node-label">Add an idea</label>
+              <input id="garden-node-label" name="label" type="text" maxlength="32" placeholder="Name a new signal" required>
+              <label for="garden-node-kind">Signal type</label>
+              <select id="garden-node-kind" name="kind">
+                <option value="idea">Idea</option><option value="question">Question</option><option value="signal">Signal</option>
+              </select>
+              <button class="garden-button garden-button-primary" type="submit"><span aria-hidden="true">＋</span> Add node</button>
+            </form>
+            <div class="garden-control-group">
+              <label for="garden-node-filter">Show nodes</label>
+              <select id="garden-node-filter" data-garden-node-filter>
+                <option value="all">All signals</option><option value="idea">Ideas</option><option value="question">Questions</option><option value="signal">Signals</option>
+              </select>
+            </div>
+            <div class="garden-control-group">
+              <label for="garden-link-filter">Filter connections</label>
+              <select id="garden-link-filter" data-garden-link-filter>
+                <option value="all">All connections</option><option value="strong">Strong connections</option><option value="cross">Across signal types</option>
+              </select>
+              <label class="garden-check"><input type="checkbox" data-garden-show-links checked><span>Show connections</span></label>
+            </div>
+            <div class="garden-actions">
+              <button class="garden-button" type="button" data-garden-connect aria-pressed="false">Connect nodes</button>
+              <button class="garden-button" type="button" data-garden-reorganize>Reorganize network</button>
+              <button class="garden-reset" type="button" data-garden-reset>Reset garden</button>
+            </div>
+            <p class="garden-help" data-garden-status aria-live="polite">Drag a node to move it. Choose Connect nodes, then select two points.</p>
+            <div class="garden-legend" aria-label="Signal types">
+              <p class="garden-kicker">Signal types</p>
+              <span><i class="garden-legend-dot garden-dot-idea"></i>Ideas</span>
+              <span><i class="garden-legend-dot garden-dot-question"></i>Questions</span>
+              <span><i class="garden-legend-dot garden-dot-signal"></i>Signals</span>
+            </div>
+          </aside>
+        </div>
+      </div>
+    </section>
+    <section class="section section-tight" aria-label="Ideas in progress"><div class="container">
+      <div class="section-heading"><div><p class="eyebrow">Ideas in progress</p></div><p>These are explorations rather than finished tools. I’ll label future additions as Live, Prototype, or Exploration so it’s clear what you can try today.</p></div>
+      <div class="lab-idea-grid">
+        <article class="lab-idea">
+          <div class="lab-idea-heading"><span class="lab-status">Exploration</span></div>
+          <h3>Responsive Reality Check</h3><p>A practical way to compare how a page behaves across desktop, tablet, and mobile sizes.</p>
+          <details><summary>Interaction ideas</summary><p>Switch between viewport presets, compare dimensions, and check for overflow. Inspecting arbitrary URLs would need careful security safeguards, so this would start with safe, controlled previews.</p></details>
+        </article>
+        <article class="lab-idea">
+          <div class="lab-idea-heading"><span class="lab-status">Exploration</span></div>
+          <h3>JSON Repair Bench</h3><p>A small browser-based utility for making JSON easier to inspect and fix.</p>
+          <details><summary>Interaction ideas</summary><p>Format, minify, validate, and copy JSON, with clear error locations when something needs fixing. A study in JavaScript and developer-focused UX.</p></details>
+        </article>
+      </div>
+      <p class="case-note" style="margin-top:24px">Exploration means an idea, not a working tool.</p>
     </div></section>
   </main>
   <footer class="site-footer"><div class="container footer-inner"><a class="wordmark" href="/" style="color:white"><span class="wordmark-mark" style="background:var(--lime);color:var(--ink)">V</span> VALERE MBAYA</a><div class="footer-nav"><a href="/projects/">Projects</a><a href="/journal/">Journal</a><a href="/services/">Services</a><a href="/contact/">Contact</a></div><p>© <span data-year>2026</span> Valere Mbaya · Nairobi, Kenya</p></div></footer>

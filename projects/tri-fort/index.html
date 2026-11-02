@@ -2,7 +2,7 @@
 <html lang="en">
 <head>
   <meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1"><meta name="theme-color" content="#f5f5f0">
-  <meta name="description" content="Project overview: Tri Fort Builders business website and web app project.">
+  <meta name="description" content="Tri Fort Builders: a Next.js public website and role-based operations platform for construction project, estimating, and billing workflows.">
   <title>Tri Fort Builders | Projects | Valere Mbaya</title><link rel="stylesheet" href="/assets/site.css"><script src="/assets/site.js" defer></script>
 </head>
 <body>
@@ -12,17 +12,21 @@
     <ul class="nav-menu" id="primary-menu"><li><a href="/about/">About</a></li><li><a href="/projects/" aria-current="page">Projects</a></li><li><a href="/journal/">Journal</a></li><li><a href="/lab/">Lab</a></li><li><a href="/services/">Services</a></li><li><a class="nav-contact" href="/contact/">Let’s talk ↗</a></li></ul>
   </nav></header>
   <main id="main">
-    <section class="page-hero"><div class="container"><p class="breadcrumbs"><a href="/">Home</a> / <a href="/projects/">Projects</a> / Tri Fort Builders</p><p class="eyebrow">Business website · Web app</p><h1>Tri Fort Builders</h1><p class="lede">A website and web app project for a construction business.</p><p style="margin-top:25px"><a class="button" href="https://trifort-builders-x8nu.vercel.app/" target="_blank" rel="noopener noreferrer">Visit live website ↗</a></p></div></section>
+    <section class="page-hero"><div class="container"><p class="breadcrumbs"><a href="/">Home</a> / <a href="/projects/">Projects</a> / Tri Fort Builders</p><p class="eyebrow">Construction operations platform · Public website</p><h1>Tri Fort Builders</h1><p class="lede">A server-rendered public site and role-based operations platform for connected construction workflows.</p><p style="margin-top:25px"><a class="button" href="https://trifort-builders-x8nu.vercel.app/" target="_blank" rel="noopener noreferrer">Visit live website ↗</a></p></div></section>
     <section class="section"><div class="container">
       <figure class="case-visual"><img src="/images/Screenshot%20(1143).png" alt="Tri Fort Builders website preview"></figure>
-      <p class="case-note">This page is a factual project overview, not a complete case study. The role, requirements, technical implementation, and outcomes still need project records before they can be described accurately.</p>
+      <div class="split-panel"><div class="split-copy"><p class="eyebrow">Overview</p><h2>Shared data for public and operational experiences.</h2><p>The public website and operations portal use a shared, normalized data model for projects, estimates, invoices, content, and customer records. Next.js Server Components handle server-side data fetching, while typed API boundaries keep application data consistent.</p><p><strong>My role:</strong> Lead Full-Stack Engineer, responsible for architecture and implementation.</p></div><div class="split-art"><img src="https://billodida.dev/_next/image?url=%2Fimages%2Fprojects%2Ftrifort%2Flogo.webp&w=1920&q=75" alt="Tri Fort Builders brand logo" loading="lazy" style="width:auto;max-width:100%;max-height:140px;object-fit:contain"></div></div>
+      <p class="eyebrow" style="margin-top:45px">Technology</p>
+      <ul class="tech-list" aria-label="Technology and capabilities">
+        <li>Next.js</li><li>TypeScript</li><li>React Server Components</li><li>Node.js</li><li>PostgreSQL</li><li>Image processing</li><li>Authentication</li><li>File storage</li><li>SEO optimization</li>
+      </ul>
       <div class="detail-grid" style="margin-top:35px">
-        <article class="detail-block"><h2>Problem</h2><p>The project is presented for a construction brand. The original business requirements and audience research are not documented here yet.</p></article>
-        <article class="detail-block"><h2>Approach</h2><p>A design and delivery narrative specific to this project is pending confirmation; no process details are assumed on this page.</p></article>
-        <article class="detail-block"><h2>Implementation</h2><p>The available portfolio identifies this as a website and web app project. Framework, data model, integrations, and authentication details have not been verified for publication.</p></article>
-        <article class="detail-block"><h2>Challenges</h2><p>Build challenges and their resolution have not been recorded in the available project notes.</p></article>
-        <article class="detail-block"><h2>Outcome</h2><p>A live site is available to explore. No performance metrics, business results, or client feedback are claimed here.</p></article>
-        <article class="detail-block"><h2>Lessons learned</h2><p>Technical lessons will be added when the project decisions and trade offs can be documented from firsthand notes.</p></article>
+        <article class="detail-block"><h2>The problem</h2><p>Projects, estimates, invoices, and customer updates were split across disconnected tools. These workflows needed a shared schema and reliable typed boundaries.</p></article>
+        <article class="detail-block"><h2>The solution</h2><p>The implementation separates a server-rendered public site from a role-based administration portal. The portal brings project management, quotation workflows, financial tracking, invoice generation, content management, and customer communication together around shared records.</p></article>
+        <article class="detail-block"><h2>Architecture</h2><p>A normalized PostgreSQL model anchors project and estimating records, including hierarchical estimation items. Typed API boundaries keep records consistent across workflows, and Server Components handle secure server-side reads.</p></article>
+        <article class="detail-block"><h2>Technical decisions</h2><p>Server Components support server-side data fetching and fast initial loads. Strict TypeScript typing across the API layer helps catch data mismatches before runtime.</p></article>
+        <article class="detail-block"><h2>Engineering highlights</h2><ul><li>Built a CMS for staff-managed website content.</li><li>Connected project lifecycle management from quotation through completion.</li><li>Integrated invoice generation and financial tracking with project records.</li><li>Implemented validated media uploads and image optimization.</li><li>Developed reusable administration components and a responsive dashboard for field and office workflows.</li><li>Optimized the public site for SEO alongside an authenticated administration experience.</li></ul></article>
+        <article class="detail-block"><h2>Results</h2><p>Project, estimating, and billing workflows share normalized records; typed API boundaries help catch data mismatches before runtime; and the role-based operations portal supports work alongside the public site.</p></article>
       </div>
     </div></section>
     <section class="cta-band"><div class="container cta-inner"><h2>Interested in a project like this?</h2><a class="button" href="/contact/">Start a conversation ↗</a></div></section>
