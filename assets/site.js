@@ -1977,4 +1977,1573 @@ ${emphasisCss}
       copyTypeText(currentUrl.href, 'Share link copied. It opens with these settings ready to explore.');
     });
   }
+
+  const requestInspector = document.querySelector('[data-request-inspector]');
+  if (requestInspector instanceof HTMLElement) {
+    const methodSelect = requestInspector.querySelector('[data-request-method]');
+    const pathInput = requestInspector.querySelector('[data-request-path]');
+    const paramsInput = requestInspector.querySelector('[data-request-params]');
+    const headersInput = requestInspector.querySelector('[data-request-headers]');
+    const bodyInput = requestInspector.querySelector('[data-request-body]');
+    const bodyWrap = requestInspector.querySelector('[data-request-body-wrap]');
+    const sendButton = requestInspector.querySelector('[data-request-send]');
+    const requestError = requestInspector.querySelector('[data-request-error]');
+    const fullUrlLabel = requestInspector.querySelector('[data-request-full-url]');
+    const statusBadge = requestInspector.querySelector('[data-request-status]');
+    const statusValue = requestInspector.querySelector('[data-request-status-value]');
+    const statusText = requestInspector.querySelector('[data-request-status-text]');
+    const durationOutput = requestInspector.querySelector('[data-request-duration]');
+    const sizeOutput = requestInspector.querySelector('[data-request-size]');
+    const bodyType = requestInspector.querySelector('[data-request-body-type]');
+    const jsonContainer = requestInspector.querySelector('[data-request-json]');
+    const rawContainer = requestInspector.querySelector('[data-request-raw]');
+    const rawToggle = requestInspector.querySelector('[data-request-raw-toggle]');
+    const copyButton = requestInspector.querySelector('[data-request-copy]');
+    const searchInput = requestInspector.querySelector('[data-request-search]');
+    const responseHeaders = requestInspector.querySelector('[data-request-response-headers]');
+    const journey = requestInspector.querySelector('[data-request-journey]');
+    const explanation = requestInspector.querySelector('[data-request-explanation]');
+    const liveStatus = requestInspector.querySelector('[data-request-live-status]');
+    const pinButton = requestInspector.querySelector('[data-request-compare-pin]');
+    const comparison = requestInspector.querySelector('[data-request-comparison]');
+    const challengeId = document.querySelector('[data-request-challenge-id]');
+    const challengeButton = document.querySelector('[data-request-challenge-check]');
+    const challengeResult = document.querySelector('[data-request-challenge-result]');
+    const responseTabs = [...requestInspector.querySelectorAll('[data-response-tab]')];
+    const responsePanels = [...requestInspector.querySelectorAll('[data-response-panel]')];
+
+    if (methodSelect instanceof HTMLSelectElement && pathInput instanceof HTMLInputElement
+      && paramsInput instanceof HTMLTextAreaElement && headersInput instanceof HTMLTextAreaElement
+      && bodyInput instanceof HTMLTextAreaElement && bodyWrap instanceof HTMLElement
+      && sendButton instanceof HTMLButtonElement && requestError instanceof HTMLElement
+      && fullUrlLabel instanceof HTMLElement && statusBadge instanceof HTMLElement
+      && statusValue instanceof HTMLElement && statusText instanceof HTMLElement
+      && durationOutput instanceof HTMLElement && sizeOutput instanceof HTMLElement
+      && bodyType instanceof HTMLElement && jsonContainer instanceof HTMLElement
+      && rawContainer instanceof HTMLPreElement && rawToggle instanceof HTMLButtonElement
+      && copyButton instanceof HTMLButtonElement && searchInput instanceof HTMLInputElement
+      && responseHeaders instanceof HTMLElement && journey instanceof HTMLOListElement
+      && explanation instanceof HTMLElement && liveStatus instanceof HTMLElement
+      && pinButton instanceof HTMLButtonElement && comparison instanceof HTMLElement
+      && challengeId instanceof HTMLInputElement && challengeButton instanceof HTMLButtonElement
+      && challengeResult instanceof HTMLElement) {
+      const apiOrigin = 'https://jsonplaceholder.typicode.com';
+      const allowedPath = /^\/(?:posts|users|comments)(?:\/\d+)?$/;
+      const blockedHeaders = new Set([
+        'authorization', 'proxy-authorization', 'cookie', 'cookie2', 'set-cookie',
+        'host', 'origin', 'referer', 'content-length', 'connection', 'x-api-key', 'api-key'
+      ]);
+      const responseLimit = 1024 * 1024;
+      let activeController = null;
+      let lastResponse = null;
+      let pinnedResponse = null;
+      let latestBodyText = '';
+
+      const examples = {
+        single: { method: 'GET', path: '/posts/1', params: '', body: '' },
+        query: { method: 'GET', path: '/posts', params: 'userId=1', body: '' },
+        user: { method: 'GET', path: '/users/1', params: '', body: '' },
+        create: {
+          method: 'POST',
+          path: '/posts',
+          params: '',
+          body: '{\n  "title": "A small request",\n  "body": "Inspect what the server returns.",\n  "userId": 1\n}'
+        },
+        missing: { method: 'GET', path: '/posts/999999', params: '', body: '' }
+      };
+
+      function setRequestLiveStatus(message, state = 'info') {
+        liveStatus.textContent = message;
+        liveStatus.dataset.state = state;
+      }
+
+      function updateUrlPreview() {
+        const suffix = paramsInput.value.trim()
+          ? `?${paramsInput.value.trim().split(/\r?\n/).filter(Boolean).join('&')}`
+          : '';
+        fullUrlLabel.textContent = `${pathInput.value.trim()}${suffix}`;
+        const isPost = methodSelect.value === 'POST';
+        bodyWrap.hidden = !isPost;
+      }
+
+      function markJourney(step, elapsed) {
+        const item = journey.querySelector(`[data-journey-step="${step}"]`);
+        if (!(item instanceof HTMLLIElement)) return;
+        item.dataset.state = 'done';
+        const time = item.querySelector('time');
+        if (time instanceof HTMLTimeElement) time.textContent = `${elapsed.toFixed(1)} ms`;
+      }
+
+      function resetJourney() {
+        journey.querySelectorAll('[data-journey-step]').forEach((item) => {
+          item.dataset.state = 'pending';
+          const time = item.querySelector('time');
+          if (time instanceof HTMLTimeElement) time.textContent = '—';
+        });
+      }
+
+      function parseLines(text, label) {
+        return text.split(/\r?\n/).map((line) => line.trim()).filter(Boolean).map((line) => {
+          const separator = line.indexOf('=');
+          if (label === 'header') {
+            const colon = line.indexOf(':');
+            if (colon < 1) throw new Error(`Use “Name: value” for each ${label}.`);
+            const name = line.slice(0, colon).trim();
+            const value = line.slice(colon + 1).trim();
+            if (blockedHeaders.has(name.toLowerCase()) || /(?:authorization|api[-_]?key|auth|token|secret|credential)/i.test(name)) {
+              throw new Error(`The ${name} header is restricted in this public demo.`);
+            }
+            if (!/^[!#$%&'*+.^_`|~\da-z-]+$/i.test(name)) throw new Error(`“${name}” is not a valid header name.`);
+            return [name, value];
+          }
+          if (separator < 1) throw new Error(`Use “key=value” for each query parameter.`);
+          const key = line.slice(0, separator).trim();
+          const value = line.slice(separator + 1).trim();
+          if (!key || /[\u0000-\u001f]/.test(key + value)) throw new Error('Query parameters cannot be empty or contain control characters.');
+          return [key, value];
+        });
+      }
+
+      function validateRequest() {
+        if (!['GET', 'POST'].includes(methodSelect.value)) throw new Error('Choose GET or POST.');
+        const path = pathInput.value.trim();
+        if (!path.startsWith('/') || path.startsWith('//') || path.includes('?') || path.includes('#')) {
+          throw new Error('Enter a path beginning with “/”. Put query parameters in the parameters field.');
+        }
+        const requestUrl = new URL(path, apiOrigin);
+        if (requestUrl.origin !== apiOrigin || requestUrl.username || requestUrl.password
+          || !allowedPath.test(requestUrl.pathname)) {
+          throw new Error('This workbench only sends requests to /posts, /users, or /comments and their numeric records.');
+        }
+        if (methodSelect.value === 'POST' && requestUrl.pathname !== '/posts') {
+          throw new Error('POST is enabled only for /posts on the test API.');
+        }
+        const parameters = parseLines(paramsInput.value, 'parameter');
+        if (parameters.length > 30) throw new Error('Use no more than 30 query parameters.');
+        parameters.forEach(([key, value]) => requestUrl.searchParams.append(key, value));
+        const headers = new Headers();
+        parseLines(headersInput.value, 'header').forEach(([name, value]) => {
+          try {
+            headers.append(name, value);
+          } catch {
+            throw new Error(`The “${name}” header value is not valid.`);
+          }
+        });
+        if (!headers.has('Accept')) headers.set('Accept', 'application/json');
+        let body;
+        if (methodSelect.value === 'POST') {
+          try {
+            body = JSON.stringify(JSON.parse(bodyInput.value));
+          } catch {
+            throw new Error('The request body must be valid JSON.');
+          }
+          if (!headers.has('Content-Type')) headers.set('Content-Type', 'application/json');
+        }
+        return { url: requestUrl, headers, body };
+      }
+
+      function appendJsonValue(parent, key, value, path, level = 0) {
+        const entry = document.createElement('div');
+        entry.className = 'request-json-entry';
+        entry.dataset.search = `${key} ${path}`.toLowerCase();
+        const keyLabel = document.createElement('span');
+        keyLabel.className = 'request-json-key';
+        keyLabel.textContent = key;
+        const punctuation = document.createElement('span');
+        punctuation.className = 'request-json-punctuation';
+        punctuation.textContent = ': ';
+        entry.append(keyLabel, punctuation);
+
+        if (value !== null && typeof value === 'object') {
+          const isArray = Array.isArray(value);
+          const entries = Object.entries(value);
+          const details = document.createElement('details');
+          details.className = 'request-json-node';
+          details.open = level < 1;
+          const summary = document.createElement('summary');
+          summary.append(entry);
+          const countLabel = document.createElement('span');
+          countLabel.className = 'request-json-punctuation';
+          countLabel.textContent = isArray ? `[${entries.length}]` : `{${entries.length}}`;
+          summary.append(countLabel);
+          details.append(summary);
+          entries.slice(0, 500).forEach(([childKey, childValue]) => {
+            appendJsonValue(details, isArray ? `[${childKey}]` : childKey, childValue, `${path}.${childKey}`, level + 1);
+          });
+          if (entries.length > 500) {
+            const truncated = document.createElement('p');
+            truncated.textContent = `Showing 500 of ${entries.length} values.`;
+            details.append(truncated);
+          }
+          parent.append(details);
+          return;
+        }
+
+        entry.classList.add('request-json-leaf');
+        const valueLabel = document.createElement('span');
+        if (typeof value === 'string') {
+          valueLabel.className = 'request-json-string';
+          valueLabel.textContent = JSON.stringify(value);
+        } else if (typeof value === 'number') {
+          valueLabel.className = 'request-json-number';
+          valueLabel.textContent = String(value);
+        } else {
+          valueLabel.className = value === null ? 'request-json-null' : 'request-json-boolean';
+          valueLabel.textContent = String(value);
+        }
+        entry.dataset.search += ` ${String(value)}`.toLowerCase();
+        entry.append(valueLabel);
+        parent.append(entry);
+      }
+
+      function renderJsonTree(value, emptyMessage = 'This response did not contain a readable body.') {
+        jsonContainer.replaceChildren();
+        if (value === undefined) {
+          const empty = document.createElement('p');
+          empty.className = 'request-empty-state';
+          empty.textContent = emptyMessage;
+          jsonContainer.append(empty);
+          return;
+        }
+        appendJsonValue(jsonContainer, Array.isArray(value) ? 'Response array' : 'Response', value, '$');
+        applyResponseSearch();
+      }
+
+      function applyResponseSearch() {
+        const query = searchInput.value.trim().toLowerCase();
+        jsonContainer.querySelectorAll('.request-json-leaf').forEach((leaf) => {
+          leaf.hidden = Boolean(query) && !leaf.textContent.toLowerCase().includes(query)
+            && !(leaf instanceof HTMLElement && leaf.dataset.search?.includes(query));
+        });
+        jsonContainer.querySelectorAll('.request-json-node').forEach((node) => {
+          const matchingChild = [...node.querySelectorAll('.request-json-leaf')].some((leaf) => !leaf.hasAttribute('hidden'));
+          const ownMatch = node.querySelector(':scope > summary')?.textContent.toLowerCase().includes(query);
+          node.hidden = Boolean(query) && !matchingChild && !ownMatch;
+          if (query && !node.hidden) node.open = true;
+        });
+      }
+
+      function getStatusInfo(status) {
+        if (status >= 200 && status < 300) {
+          if (status === 201) return ['Created', 'The server reported that it created a resource. On JSONPlaceholder, POST responses are simulated and are not permanently saved.'];
+          return ['OK', 'The server returned a successful status. Check the body too: a successful status alone does not confirm the data matches what your application expected.'];
+        }
+        const known = {
+          400: ['Bad Request', 'The server rejected the request. Review its response body, query parameters, and payload; this status alone does not identify which field is wrong.'],
+          401: ['Unauthorized', 'The server requires acceptable authentication. This response does not prove a password is incorrect. This public workbench does not accept credentials.'],
+          403: ['Forbidden', 'The server understood the request but declined to fulfill it. The status alone does not say which permission or policy applied.'],
+          404: ['Not Found', 'The server did not find a matching resource at this path. Check the endpoint and record ID.'],
+          429: ['Too Many Requests', 'The server is limiting requests. Check readable retry or rate-limit headers before trying again.'],
+          500: ['Internal Server Error', 'The server reported an error while handling the request. A client cannot infer the underlying cause from this status alone.']
+        };
+        return known[status] || [`HTTP ${status}`, status >= 400
+          ? 'The server returned an error status. Inspect the response body and headers for details; the status alone may not reveal the cause.'
+          : 'The server returned this HTTP status. Inspect the body and headers to understand what the endpoint provided.'];
+      }
+
+      function renderExplanation(responseRecord) {
+        const [label, message] = getStatusInfo(responseRecord.status);
+        const heading = document.createElement('strong');
+        heading.textContent = `HTTP ${responseRecord.status} ${label}`;
+        const detail = document.createElement('p');
+        detail.textContent = message;
+        const context = document.createElement('p');
+        const contentType = responseRecord.headers['content-type'] || 'not exposed';
+        context.textContent = `Observed content type: ${contentType}. ${responseRecord.isJson ? 'The body was parsed as JSON.' : 'The body was not valid JSON.'}`;
+        explanation.replaceChildren(heading, detail, context);
+      }
+
+      const headerNotes = {
+        'content-type': 'Describes the format of the response body.',
+        'cache-control': 'Describes caching rules that clients and intermediaries should follow.',
+        etag: 'A validator that can help clients ask whether a resource changed.',
+        date: 'The date and time the server says it generated the response.',
+        'content-length': 'The byte length reported by the server, when exposed.',
+        'retry-after': 'A suggested delay before retrying, often relevant to rate limiting.',
+        'access-control-allow-origin': 'A CORS response header; it does not make every other response header readable.'
+      };
+
+      function renderHeaders(headers) {
+        const list = document.createElement('dl');
+        list.className = 'request-response-header-list';
+        const entries = Object.entries(headers);
+        if (entries.length === 0) {
+          const empty = document.createElement('p');
+          empty.className = 'request-empty-state';
+          empty.textContent = 'No response headers were readable.';
+          responseHeaders.replaceChildren(empty);
+          return;
+        }
+        entries.forEach(([name, value]) => {
+          const term = document.createElement('dt');
+          term.textContent = name;
+          const description = headerNotes[name.toLowerCase()];
+          if (description) term.title = description;
+          const detail = document.createElement('dd');
+          detail.textContent = value;
+          if (description) {
+            const note = document.createElement('span');
+            note.className = 'request-header-note';
+            note.textContent = description;
+            detail.append(note);
+          }
+          list.append(term, detail);
+        });
+        responseHeaders.replaceChildren(list);
+      }
+
+      function flattenJson(value, prefix = '$', result = new Map(), limit = 500) {
+        if (result.size >= limit) return result;
+        if (value !== null && typeof value === 'object') {
+          Object.entries(value).forEach(([key, child]) => {
+            if (result.size < limit) flattenJson(child, Array.isArray(value) ? `${prefix}[${key}]` : `${prefix}.${key}`, result, limit);
+          });
+        } else {
+          result.set(prefix, value);
+        }
+        return result;
+      }
+
+      function compareResponses(first, second) {
+        const firstFields = flattenJson(first.json);
+        const secondFields = flattenJson(second.json);
+        const allPaths = new Set([...firstFields.keys(), ...secondFields.keys()]);
+        const changes = [];
+        allPaths.forEach((path) => {
+          const inFirst = firstFields.has(path);
+          const inSecond = secondFields.has(path);
+          if (!inFirst) changes.push({ path, change: 'added', before: undefined, after: secondFields.get(path) });
+          else if (!inSecond) changes.push({ path, change: 'removed', before: firstFields.get(path), after: undefined });
+          else if (JSON.stringify(firstFields.get(path)) !== JSON.stringify(secondFields.get(path))) {
+            changes.push({ path, change: 'changed', before: firstFields.get(path), after: secondFields.get(path) });
+          }
+        });
+        return changes.slice(0, 100);
+      }
+
+      function renderComparison(first, second) {
+        if (!first || !second) return;
+        const grid = document.createElement('div');
+        grid.className = 'request-comparison-grid';
+        [
+          { label: 'PINNED RESPONSE', response: first },
+          { label: 'LATEST RESPONSE', response: second }
+        ].forEach(({ label, response }) => {
+          const card = document.createElement('div');
+          card.className = 'request-comparison-card';
+          const title = document.createElement('h4');
+          title.textContent = label;
+          const endpoint = document.createElement('p');
+          endpoint.textContent = `${response.method} ${response.url}`;
+          const status = document.createElement('p');
+          status.textContent = `HTTP ${response.status} · ${response.duration.toFixed(1)} ms · ${response.size} bytes`;
+          card.append(title, endpoint, status);
+          grid.append(card);
+        });
+        const changes = compareResponses(first, second);
+        const list = document.createElement('ul');
+        list.className = 'request-diff-list';
+        if (changes.length === 0) {
+          const same = document.createElement('li');
+          same.textContent = 'No JSON field changes found in the readable bodies.';
+          list.append(same);
+        } else {
+          changes.forEach((item) => {
+            const row = document.createElement('li');
+            row.dataset.change = item.change;
+            const before = item.before === undefined ? '—' : JSON.stringify(item.before);
+            const after = item.after === undefined ? '—' : JSON.stringify(item.after);
+            row.textContent = `${item.change.toUpperCase()} ${item.path} · ${before} → ${after}`;
+            list.append(row);
+          });
+        }
+        grid.append(list);
+        comparison.replaceChildren(grid);
+      }
+
+      function selectResponseTab(name) {
+        responseTabs.forEach((tab) => {
+          const selected = tab.dataset.responseTab === name;
+          tab.setAttribute('aria-selected', String(selected));
+        });
+        responsePanels.forEach((panel) => {
+          panel.hidden = panel.dataset.responsePanel !== name;
+        });
+      }
+
+      function formatSize(size) {
+        return size < 1024 ? `${size} B` : `${(size / 1024).toFixed(1)} KB`;
+      }
+
+      async function readResponseBody(response, controller) {
+        if (!response.body) return '';
+        const reader = response.body.getReader();
+        const chunks = [];
+        let size = 0;
+        while (true) {
+          const { done, value } = await reader.read();
+          if (done) break;
+          size += value.byteLength;
+          if (size > responseLimit) {
+            await reader.cancel();
+            controller.abort();
+            throw new Error('Response exceeded the 1 MB safety limit and was stopped.');
+          }
+          chunks.push(value);
+        }
+        const combined = new Uint8Array(size);
+        let offset = 0;
+        chunks.forEach((chunk) => {
+          combined.set(chunk, offset);
+          offset += chunk.byteLength;
+        });
+        return new TextDecoder().decode(combined);
+      }
+
+      function showRequestError(error, elapsed) {
+        const message = error instanceof Error ? error.message : 'An unexpected request error occurred.';
+        statusBadge.textContent = 'No response';
+        statusBadge.dataset.state = 'error';
+        statusValue.textContent = '—';
+        statusText.textContent = 'No readable HTTP response';
+        durationOutput.textContent = `${elapsed.toFixed(0)} ms`;
+        sizeOutput.textContent = '—';
+        requestError.textContent = message.includes('Failed to fetch') || message.includes('NetworkError')
+          ? 'The browser could not read a response. The API may be unavailable or CORS may have blocked access; this is not an HTTP status code.'
+          : message;
+        requestError.hidden = false;
+        latestBodyText = '';
+        rawContainer.textContent = '';
+        rawContainer.hidden = true;
+        rawToggle.hidden = true;
+        jsonContainer.hidden = false;
+        copyButton.disabled = true;
+        const [label, detail] = ['Network or browser error', message];
+        const title = document.createElement('strong');
+        title.textContent = label;
+        const text = document.createElement('p');
+        text.textContent = detail.includes('Failed to fetch')
+          ? 'Fetch did not provide readable response headers. Check the network connection or API CORS policy; browser security prevents this page from inspecting the blocked response.'
+          : detail;
+        explanation.replaceChildren(title, text);
+        renderJsonTree(undefined, 'No response body could be read.');
+        renderHeaders({});
+        setRequestLiveStatus(requestError.textContent, 'error');
+      }
+
+      async function sendRequest() {
+        if (activeController) activeController.abort();
+        requestError.hidden = true;
+        const requestButtonText = sendButton.textContent;
+        sendButton.disabled = true;
+        sendButton.textContent = 'Sending…';
+        statusBadge.textContent = 'Sending';
+        statusBadge.dataset.state = 'pending';
+        statusValue.textContent = '…';
+        statusText.textContent = 'Waiting for server';
+        durationOutput.textContent = '—';
+        sizeOutput.textContent = '—';
+        latestBodyText = '';
+        rawContainer.textContent = '';
+        rawContainer.hidden = true;
+        rawToggle.hidden = true;
+        jsonContainer.hidden = false;
+        copyButton.disabled = true;
+        bodyType.textContent = 'Response JSON';
+        renderJsonTree(undefined, 'Waiting for a response body.');
+        renderHeaders({});
+        const pendingTitle = document.createElement('strong');
+        pendingTitle.textContent = 'Request in progress';
+        const pendingText = document.createElement('p');
+        pendingText.textContent = 'Waiting for the server to respond.';
+        explanation.replaceChildren(pendingTitle, pendingText);
+        resetJourney();
+        const start = performance.now();
+        let request;
+        try {
+          request = validateRequest();
+        } catch (error) {
+          requestError.textContent = error instanceof Error ? error.message : 'The request could not be validated.';
+          requestError.hidden = false;
+          statusBadge.textContent = 'Not sent';
+          statusBadge.removeAttribute('data-state');
+          statusValue.textContent = '—';
+          statusText.textContent = 'Request not sent';
+          durationOutput.textContent = '—';
+          sizeOutput.textContent = '—';
+          renderJsonTree(undefined, 'No response body; request validation failed.');
+          sendButton.disabled = false;
+          sendButton.textContent = requestButtonText;
+          setRequestLiveStatus('Request validation failed. Nothing was sent.', 'error');
+          return null;
+        }
+
+        const controller = new AbortController();
+        activeController = controller;
+        const timeoutId = window.setTimeout(() => controller.abort('Request timed out after 10 seconds.'), 10000);
+        const requestMethod = methodSelect.value;
+        const init = { method: requestMethod, headers: request.headers, signal: controller.signal, mode: 'cors', credentials: 'omit', redirect: 'error' };
+        if (requestMethod === 'POST') init.body = request.body;
+        markJourney('prepared', performance.now() - start);
+        setRequestLiveStatus(`Sending ${requestMethod} request to ${request.url.pathname}…`);
+        markJourney('sent', performance.now() - start);
+        try {
+          const response = await fetch(request.url.href, init);
+          const headersAt = performance.now();
+          markJourney('headers', headersAt - start);
+          const responseText = await readResponseBody(response, controller);
+          const completedAt = performance.now();
+          markJourney('body', completedAt - start);
+          const responseHeadersObject = Object.fromEntries(response.headers.entries());
+          let json;
+          let isJson = false;
+          try {
+            json = responseText ? JSON.parse(responseText) : null;
+            isJson = true;
+          } catch {
+            json = undefined;
+          }
+          const responseRecord = {
+            method: requestMethod,
+            url: request.url.href,
+            status: response.status,
+            statusText: response.statusText,
+            duration: completedAt - start,
+            headerDuration: headersAt - start,
+            size: new TextEncoder().encode(responseText).byteLength,
+            headers: responseHeadersObject,
+            body: responseText,
+            json,
+            isJson,
+            ok: response.ok
+          };
+          lastResponse = responseRecord;
+          latestBodyText = responseText;
+          statusBadge.textContent = `HTTP ${response.status}`;
+          statusBadge.dataset.state = response.ok ? 'success' : 'error';
+          statusValue.textContent = String(response.status);
+          statusText.textContent = response.statusText || 'HTTP response received';
+          durationOutput.textContent = `${responseRecord.duration.toFixed(0)} ms`;
+          sizeOutput.textContent = formatSize(responseRecord.size);
+          bodyType.textContent = isJson ? 'Response JSON' : 'Response text';
+          copyButton.textContent = isJson ? 'Copy JSON' : 'Copy response';
+          rawContainer.textContent = isJson ? JSON.stringify(json, null, 2) : responseText;
+          rawToggle.hidden = !responseText;
+          rawToggle.textContent = isJson ? 'Show raw JSON' : 'Show response text';
+          rawContainer.hidden = true;
+          jsonContainer.hidden = false;
+          copyButton.disabled = !responseText;
+          if (isJson) {
+            renderJsonTree(json);
+          } else {
+            const textMessage = document.createElement('p');
+            textMessage.className = 'request-empty-state';
+            textMessage.textContent = 'This response is not JSON. Show the response text to read it.';
+            jsonContainer.replaceChildren(textMessage);
+          }
+          renderHeaders(responseHeadersObject);
+          renderExplanation(responseRecord);
+          if (pinnedResponse) {
+            renderComparison(pinnedResponse, responseRecord);
+            requestInspector.querySelector('[data-response-tab="compare"]').removeAttribute('disabled');
+          }
+          pinButton.disabled = false;
+          setRequestLiveStatus(`Received HTTP ${response.status} in ${responseRecord.duration.toFixed(0)} ms. ${isJson ? 'JSON parsed successfully.' : 'Response was not JSON.'}`, response.ok ? 'success' : 'error');
+          return responseRecord;
+        } catch (error) {
+          const elapsed = performance.now() - start;
+          if (controller.signal.aborted && elapsed >= 9900) {
+            showRequestError(new Error('The request timed out after 10 seconds. Check the network and try again.'), elapsed);
+          } else {
+            showRequestError(error, elapsed);
+          }
+          return null;
+        } finally {
+          window.clearTimeout(timeoutId);
+          if (activeController === controller) activeController = null;
+          sendButton.disabled = false;
+          sendButton.textContent = requestButtonText;
+        }
+      }
+
+      function setExample(name) {
+        const example = examples[name];
+        if (!example) return;
+        methodSelect.value = example.method;
+        pathInput.value = example.path;
+        paramsInput.value = example.params;
+        headersInput.value = 'Accept: application/json';
+        bodyInput.value = example.body;
+        updateUrlPreview();
+        requestError.hidden = true;
+        setRequestLiveStatus(`${example.method} ${example.path} is ready. Send it to see the real response.`);
+      }
+
+      methodSelect.addEventListener('change', updateUrlPreview);
+      pathInput.addEventListener('input', updateUrlPreview);
+      paramsInput.addEventListener('input', updateUrlPreview);
+      sendButton.addEventListener('click', () => sendRequest());
+      document.querySelectorAll('[data-request-example]').forEach((button) => {
+        button.addEventListener('click', () => {
+          if (button instanceof HTMLButtonElement && button.dataset.requestExample) setExample(button.dataset.requestExample);
+        });
+      });
+
+      responseTabs.forEach((tab, index) => {
+        tab.addEventListener('click', () => {
+          if (tab instanceof HTMLButtonElement && !tab.disabled && tab.dataset.responseTab) selectResponseTab(tab.dataset.responseTab);
+        });
+        tab.addEventListener('keydown', (event) => {
+          if (event.key !== 'ArrowLeft' && event.key !== 'ArrowRight') return;
+          event.preventDefault();
+          const direction = event.key === 'ArrowRight' ? 1 : -1;
+          let nextIndex = index;
+          do {
+            nextIndex = (nextIndex + direction + responseTabs.length) % responseTabs.length;
+          } while (responseTabs[nextIndex].disabled && nextIndex !== index);
+          responseTabs[nextIndex].focus();
+          if (responseTabs[nextIndex].dataset.responseTab) selectResponseTab(responseTabs[nextIndex].dataset.responseTab);
+        });
+      });
+
+      searchInput.addEventListener('input', applyResponseSearch);
+      rawToggle.addEventListener('click', () => {
+        const showRaw = rawContainer.hidden;
+        rawContainer.hidden = !showRaw;
+        jsonContainer.hidden = showRaw;
+        rawToggle.textContent = showRaw ? 'Show JSON tree' : 'Show raw JSON';
+      });
+      copyButton.addEventListener('click', async () => {
+        try {
+          await navigator.clipboard.writeText(latestBodyText);
+          setRequestLiveStatus('Response body copied to the clipboard.', 'success');
+        } catch (error) {
+          console.error('Unable to copy the API response body:', error);
+          setRequestLiveStatus('Clipboard access failed. Check browser permissions and try again.', 'error');
+        }
+      });
+      pinButton.addEventListener('click', () => {
+        if (!lastResponse) return;
+        pinnedResponse = lastResponse;
+        pinButton.textContent = 'Pinned · send another request';
+        requestInspector.querySelector('[data-response-tab="compare"]').removeAttribute('disabled');
+        if (lastResponse) {
+          const title = document.createElement('p');
+          title.className = 'request-empty-state';
+          title.textContent = 'Pinned response saved. Send a different request to compare JSON fields.';
+          comparison.replaceChildren(title);
+        }
+        setRequestLiveStatus('Response pinned. Change a path or parameter, then send another request.');
+      });
+
+      challengeButton.addEventListener('click', async () => {
+        const id = Number(challengeId.value);
+        if (!Number.isInteger(id) || id < 1 || id > 1000000) {
+          challengeResult.textContent = 'Enter a whole-number post ID between 1 and 1,000,000.';
+          challengeResult.dataset.state = 'error';
+          return;
+        }
+        challengeButton.disabled = true;
+        challengeButton.textContent = 'Checking live response…';
+        methodSelect.value = 'GET';
+        pathInput.value = `/posts/${id}`;
+        paramsInput.value = '';
+        headersInput.value = 'Accept: application/json';
+        updateUrlPreview();
+        const response = await sendRequest();
+        challengeButton.disabled = false;
+        challengeButton.textContent = 'Check my request ↗';
+        if (!response) {
+          challengeResult.textContent = 'No readable response arrived. Check the request result above; a network or CORS failure cannot count as completion.';
+          challengeResult.dataset.state = 'error';
+        } else if (response.status === 200 && response.json && Number(response.json.id) === id) {
+          challengeResult.textContent = `Found it. The API returned post ${id} with HTTP 200. Try ID 999999 to compare a real 404.`;
+          challengeResult.dataset.state = 'success';
+        } else if (response.status === 404) {
+          challengeResult.textContent = `HTTP 404 received for post ${id}. Try a different ID and check the response status again.`;
+          challengeResult.dataset.state = 'error';
+        } else {
+          challengeResult.textContent = `The API returned HTTP ${response.status}. Try a post ID that exists and inspect the response body.`;
+          challengeResult.dataset.state = 'error';
+        }
+      });
+
+      updateUrlPreview();
+      setExample('single');
+    }
+  }
 }
+
+(() => {
+  const bench = document.querySelector('[data-json-bench]');
+  if (!(bench instanceof HTMLElement)) return;
+  const input = bench.querySelector('[data-json-input]');
+  const lineNumbers = bench.querySelector('[data-json-lines]');
+  const highlight = bench.querySelector('[data-json-highlight]');
+  const validity = bench.querySelector('[data-json-validity]');
+  const diagnostics = bench.querySelector('[data-json-diagnostics]');
+  const output = bench.querySelector('[data-json-output]');
+  const outputStatus = bench.querySelector('[data-json-output-status]');
+  const outputSize = bench.querySelector('[data-json-output-size]');
+  const indentSelect = bench.querySelector('[data-json-indent]');
+  const tree = bench.querySelector('[data-json-tree]');
+  const treeSearch = bench.querySelector('[data-json-tree-search]');
+  const repairSummary = bench.querySelector('[data-json-repair-summary]');
+  const repairOriginal = bench.querySelector('[data-json-repair-original]');
+  const repairProposed = bench.querySelector('[data-json-repair-proposed]');
+  const transformNote = bench.querySelector('[data-json-transform-note]');
+  const selectedPanel = bench.querySelector('.json-selected-path');
+  const selectedPathLabel = bench.querySelector('[data-json-selected-path]');
+  const selectedTypeLabel = bench.querySelector('[data-json-selected-type]');
+  const copyPathButton = bench.querySelector('[data-json-copy-path]');
+  const copyValueButton = bench.querySelector('[data-json-copy-value]');
+  const treeExpandButton = bench.querySelector('[data-json-tree-expand]');
+  const treeCollapseButton = bench.querySelector('[data-json-tree-collapse]');
+  const pathInput = bench.querySelector('[data-json-path]');
+  const actionButtons = [...bench.querySelectorAll('[data-json-action]')];
+  const tabs = [...bench.querySelectorAll('[data-json-tab]')];
+  const views = [...bench.querySelectorAll('[data-json-view]')];
+  const statOutputs = [...bench.querySelectorAll('[data-json-stat]')];
+  if (!(input instanceof HTMLTextAreaElement) || !(lineNumbers instanceof HTMLElement)
+    || !(highlight instanceof HTMLElement) || !(validity instanceof HTMLElement)
+    || !(diagnostics instanceof HTMLElement) || !(output instanceof HTMLElement)
+    || !(outputStatus instanceof HTMLElement) || !(outputSize instanceof HTMLElement)
+    || !(indentSelect instanceof HTMLSelectElement) || !(tree instanceof HTMLElement)
+    || !(treeSearch instanceof HTMLInputElement) || !(repairSummary instanceof HTMLElement)
+    || !(repairOriginal instanceof HTMLElement) || !(repairProposed instanceof HTMLElement)
+    || !(transformNote instanceof HTMLElement) || !(selectedPanel instanceof HTMLElement)
+    || !(selectedPathLabel instanceof HTMLElement) || !(selectedTypeLabel instanceof HTMLElement)
+    || !(copyPathButton instanceof HTMLButtonElement) || !(copyValueButton instanceof HTMLButtonElement)
+    || !(treeExpandButton instanceof HTMLButtonElement) || !(treeCollapseButton instanceof HTMLButtonElement)
+    || !(pathInput instanceof HTMLInputElement)) return;
+
+  const sample = `{
+  "name": "Nipe Connect",
+  "active": true,
+  "skills": ["Plumbing", "Electrical",],
+  "wallet": {"balance": 2500}
+}`;
+  let parsed;
+  let valid = false;
+  let outputText = '';
+  let outputKind = 'json';
+  let repair = null;
+  let selectedValue;
+  let selectedPath = '';
+  let hasSelectedValue = false;
+  let treeNodes = 0;
+  const treeLimit = 5000;
+  const treeDepthLimit = 80;
+
+  function status(message, state = 'info') {
+    outputStatus.textContent = message;
+    outputStatus.dataset.state = state;
+  }
+
+  function escapeHtml(text) {
+    return text.replace(/[&<>"']/g, (character) => ({
+      '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;', "'": '&#39;'
+    })[character]);
+  }
+
+  function syntaxHighlight(source, marked = new Set()) {
+    if (source.length > 100000) {
+      const positions = [...marked].filter((position) => position >= 0 && position < source.length).sort((a, b) => a - b);
+      if (!positions.length) return escapeHtml(source);
+      let highlighted = '';
+      let cursor = 0;
+      positions.forEach((position) => {
+        if (position < cursor) return;
+        highlighted += `${escapeHtml(source.slice(cursor, position))}<mark class="json-repair-change">${escapeHtml(source[position])}</mark>`;
+        cursor = position + 1;
+      });
+      return highlighted + escapeHtml(source.slice(cursor));
+    }
+    const pattern = /("(?:\\.|[^"\\])*"(?=\s*:)|"(?:\\.|[^"\\])*"|-?(?:0|[1-9]\d*)(?:\.\d+)?(?:[eE][+-]?\d+)?|\b(?:true|false|null)\b|[{}\[\],:])/g;
+    let result = '';
+    let cursor = 0;
+    let match = pattern.exec(source);
+    while (match) {
+      result += escapeHtml(source.slice(cursor, match.index));
+      const token = match[0];
+      const kind = token[0] === '"' ? (/^\s*:/.test(source.slice(match.index + token.length)) ? 'key' : 'string')
+        : /^-?\d/.test(token) ? 'number'
+          : token === 'true' || token === 'false' ? 'boolean'
+            : token === 'null' ? 'null' : 'punctuation';
+      const highlightedToken = `<span class="json-token-${kind}">${escapeHtml(token)}</span>`;
+      result += marked.has(match.index) ? `<mark class="json-repair-change">${highlightedToken}</mark>` : highlightedToken;
+      cursor = match.index + token.length;
+      match = pattern.exec(source);
+    }
+    return result + escapeHtml(source.slice(cursor));
+  }
+
+  function syncEditor() {
+    highlight.innerHTML = `${syntaxHighlight(input.value)}\n`;
+    lineNumbers.textContent = Array.from({ length: input.value.split('\n').length }, (_, index) => String(index + 1)).join('\n');
+    const count = bench.querySelector('[data-json-input-stats]');
+    if (count) count.textContent = `${input.value.length.toLocaleString()} characters · ${input.value.split('\n').length.toLocaleString()} lines`;
+    highlight.style.transform = `translate(${-input.scrollLeft}px, ${-input.scrollTop}px)`;
+    lineNumbers.style.transform = `translateY(${-input.scrollTop}px)`;
+  }
+
+  function setDiagnostic(state, title, detail, location = '') {
+    diagnostics.replaceChildren();
+    diagnostics.dataset.state = state;
+    const heading = document.createElement('strong');
+    heading.textContent = location ? `${title} · ${location}` : title;
+    const message = document.createElement('p');
+    message.textContent = detail;
+    diagnostics.append(heading, message);
+  }
+
+  function locationForError(message, source) {
+    const match = message.match(/position\s+(\d+)/i);
+    if (!match) return '';
+    return locationAt(source, Number(match[1]));
+  }
+
+  function locationAt(source, offset) {
+    const position = Math.min(offset, source.length);
+    const prefix = source.slice(0, position);
+    return `line ${prefix.split('\n').length}, column ${position - prefix.lastIndexOf('\n')}`;
+  }
+
+  function removeComments(source) {
+    let result = '';
+    let count = 0;
+    let doubleString = false;
+    let singleString = false;
+    let escaped = false;
+    for (let i = 0; i < source.length; i += 1) {
+      const character = source[i];
+      if (doubleString || singleString) {
+        result += character;
+        if (escaped) escaped = false;
+        else if (character === '\\') escaped = true;
+        else if ((doubleString && character === '"') || (singleString && character === "'")) {
+          doubleString = false;
+          singleString = false;
+        }
+        continue;
+      }
+      if (character === '"') {
+        doubleString = true;
+        result += character;
+      } else if (character === "'") {
+        singleString = true;
+        result += character;
+      } else if (character === '/' && source[i + 1] === '/') {
+        count += 1;
+        i += 2;
+        while (i < source.length && source[i] !== '\n' && source[i] !== '\r') {
+          result += ' ';
+          i += 1;
+        }
+        if (i < source.length) result += source[i];
+      } else if (character === '/' && source[i + 1] === '*') {
+        const close = source.indexOf('*/', i + 2);
+        if (close < 0) return { text: source, count: 0 };
+        count += 1;
+        for (let index = i; index < close + 2; index += 1) {
+          result += source[index] === '\n' || source[index] === '\r' ? source[index] : ' ';
+        }
+        i = close + 1;
+      } else {
+        result += character;
+      }
+    }
+    return { text: result, count };
+  }
+
+  function convertSingleQuotedStrings(source) {
+    let result = '';
+    let converted = 0;
+    let inDoubleString = false;
+    let escaped = false;
+    for (let i = 0; i < source.length; i += 1) {
+      const character = source[i];
+      if (inDoubleString) {
+        result += character;
+        if (escaped) escaped = false;
+        else if (character === '\\') escaped = true;
+        else if (character === '"') inDoubleString = false;
+        continue;
+      }
+      if (character === '"') {
+        inDoubleString = true;
+        result += character;
+        continue;
+      }
+      if (character !== "'") {
+        result += character;
+        continue;
+      }
+      let replacement = '"';
+      let closed = false;
+      for (i += 1; i < source.length; i += 1) {
+        const next = source[i];
+        if (next === "'") {
+          closed = true;
+          break;
+        }
+        if (next === '\\') {
+          const escapedCharacter = source[i + 1];
+          if (!escapedCharacter) return null;
+          if (escapedCharacter === "'") replacement += "'";
+          else if (escapedCharacter === '"') replacement += '\\"';
+          else if (escapedCharacter === '\\') replacement += '\\\\';
+          else if ('/bfnrt'.includes(escapedCharacter)) replacement += `\\${escapedCharacter}`;
+          else if (escapedCharacter === 'u' && /^[0-9a-f]{4}$/i.test(source.slice(i + 2, i + 6))) {
+            replacement += `\\u${source.slice(i + 2, i + 6)}`;
+            i += 4;
+          } else return null;
+          i += 1;
+          continue;
+        }
+        if (next === '"' ) replacement += '\\"';
+        else if (next.charCodeAt(0) < 0x20) return null;
+        else replacement += next;
+      }
+      if (!closed) return null;
+      result += `${replacement}"`;
+      converted += 1;
+    }
+    return { text: result, count: converted };
+  }
+
+  function quoteUnquotedKeys(source) {
+    let result = '';
+    let quoted = 0;
+    let inString = false;
+    let escaped = false;
+    const containers = [];
+    for (let i = 0; i < source.length; i += 1) {
+      const character = source[i];
+      if (inString) {
+        result += character;
+        if (escaped) escaped = false;
+        else if (character === '\\') escaped = true;
+        else if (character === '"') inString = false;
+        continue;
+      }
+      if (character === '"') {
+        inString = true;
+        result += character;
+        continue;
+      }
+      const parent = containers[containers.length - 1];
+      if (parent && parent.kind === 'object' && parent.expectKey && /[A-Za-z_$]/.test(character)) {
+        const match = source.slice(i).match(/^[A-Za-z_$][\w$]*/);
+        if (match && /^\s*:/.test(source.slice(i + match[0].length))) {
+          result += JSON.stringify(match[0]);
+          i += match[0].length - 1;
+          quoted += 1;
+          continue;
+        }
+      }
+      result += character;
+      if (character === '{') containers.push({ kind: 'object', expectKey: true });
+      else if (character === '[') containers.push({ kind: 'array', expectKey: false });
+      else if (character === '}' || character === ']') containers.pop();
+      else if (character === ',' && parent?.kind === 'object') parent.expectKey = true;
+      else if (character === ':' && parent?.kind === 'object') parent.expectKey = false;
+    }
+    return { text: result, count: quoted };
+  }
+
+  function trailingCommas(source) {
+    const positions = [];
+    let inString = false;
+    let escaped = false;
+    for (let i = 0; i < source.length; i += 1) {
+      const character = source[i];
+      if (inString) {
+        if (escaped) escaped = false;
+        else if (character === '\\') escaped = true;
+        else if (character === '"') inString = false;
+      } else if (character === '"') inString = true;
+      else if (character === ',') {
+        let next = i + 1;
+        while (next < source.length && /\s/.test(source[next])) next += 1;
+        if (source[next] === ']' || source[next] === '}') positions.push(i);
+      }
+    }
+    return positions;
+  }
+
+  function safeRepair(source) {
+    const changes = [];
+    const comments = removeComments(source);
+    let candidate = comments.text;
+    if (comments.count) changes.push(`Removed ${comments.count} ${comments.count === 1 ? 'comment' : 'comments'}`);
+    const singleStrings = convertSingleQuotedStrings(candidate);
+    if (singleStrings) {
+      candidate = singleStrings.text;
+      if (singleStrings.count) changes.push(`Converted ${singleStrings.count} single-quoted ${singleStrings.count === 1 ? 'string' : 'strings'}`);
+      const keys = quoteUnquotedKeys(candidate);
+      candidate = keys.text;
+      if (keys.count) changes.push(`Quoted ${keys.count} unquoted ${keys.count === 1 ? 'key' : 'keys'}`);
+    }
+    const originalCommaPositions = candidate === source ? trailingCommas(candidate) : [];
+    const positions = trailingCommas(candidate);
+    if (positions.length) {
+      positions.slice().reverse().forEach((position) => {
+        candidate = `${candidate.slice(0, position)}${candidate.slice(position + 1)}`;
+      });
+      changes.push(`Removed ${positions.length} trailing ${positions.length === 1 ? 'comma' : 'commas'}`);
+    }
+    if (!changes.length) return null;
+    try {
+      JSON.parse(candidate);
+      return { source, candidate, positions: originalCommaPositions, changes };
+    } catch {
+      return null;
+    }
+  }
+
+  function updateRepair(nextRepair) {
+    repair = nextRepair;
+    const tab = bench.querySelector('[data-json-tab="repair"]');
+    if (!(tab instanceof HTMLButtonElement)) return;
+    tab.disabled = !repair;
+    if (!repair) return;
+    repairSummary.textContent = `${repair.changes.join('. ')}. The complete proposal passes JSON.parse().`;
+    repairOriginal.innerHTML = syntaxHighlight(repair.source, new Set(repair.positions));
+    repairProposed.innerHTML = syntaxHighlight(repair.candidate);
+  }
+
+  function byteSize(text) {
+    const size = new TextEncoder().encode(text).byteLength;
+    return size < 1024 ? `${size} B` : `${(size / 1024).toFixed(1)} KB`;
+  }
+
+  function updateStats(value, source) {
+    let keys = 0;
+    let arrays = 0;
+    let depth = 1;
+    const pending = [{ value, depth: 1 }];
+    while (pending.length) {
+      const item = pending.pop();
+      depth = Math.max(depth, item.depth);
+      if (Array.isArray(item.value)) {
+        arrays += 1;
+        item.value.forEach((child) => pending.push({ value: child, depth: item.depth + 1 }));
+      } else if (item.value !== null && typeof item.value === 'object') {
+        const entries = Object.entries(item.value);
+        keys += entries.length;
+        entries.forEach(([, child]) => pending.push({ value: child, depth: item.depth + 1 }));
+      }
+    }
+    const stats = { keys, arrays, depth, size: byteSize(source) };
+    statOutputs.forEach((element) => {
+      const key = element.dataset.jsonStat;
+      element.textContent = key && stats[key] !== undefined ? String(stats[key]) : '—';
+    });
+  }
+
+  function disableTransformations(disabled) {
+    ['sort', 'extract', 'csv'].forEach((name) => {
+      const button = bench.querySelector(`[data-json-action="${name}"]`);
+      if (!(button instanceof HTMLButtonElement)) return;
+      const csvReady = Array.isArray(parsed) && parsed.length > 0
+        && parsed.every((item) => item !== null && typeof item === 'object' && !Array.isArray(item))
+        && parsed.some((item) => Object.keys(item).length > 0);
+      button.disabled = disabled || (name === 'csv' && !csvReady);
+    });
+    treeExpandButton.disabled = disabled;
+    treeCollapseButton.disabled = disabled;
+  }
+
+  function setOutput(text, kind = 'json', message = 'Output ready') {
+    outputText = text;
+    outputKind = kind;
+    output.innerHTML = kind === 'json' ? syntaxHighlight(text) : escapeHtml(text);
+    outputSize.textContent = byteSize(text);
+    status(message, 'success');
+    actionButtons.forEach((button) => {
+      if (button.dataset.jsonAction === 'copy' || button.dataset.jsonAction === 'download') button.disabled = false;
+    });
+  }
+
+  function clearOutput(message = 'Formatted or transformed JSON will appear here.') {
+    outputText = '';
+    outputKind = 'json';
+    output.innerHTML = `<span class="json-output-placeholder">${escapeHtml(message)}</span>`;
+    outputSize.textContent = '—';
+    status('Waiting for JSON');
+    actionButtons.forEach((button) => {
+      if (button.dataset.jsonAction === 'copy' || button.dataset.jsonAction === 'download') button.disabled = true;
+    });
+  }
+
+  function clearTreeSelection() {
+    selectedValue = undefined;
+    selectedPath = '';
+    hasSelectedValue = false;
+    selectedPanel.hidden = true;
+    copyPathButton.disabled = true;
+    copyValueButton.disabled = true;
+  }
+
+  function pathForChild(path, key, array) {
+    if (array) return `${path}[${key}]`;
+    return /^[A-Za-z_$][\w$]*$/.test(key) ? `${path}.${key}` : `${path}[${JSON.stringify(key)}]`;
+  }
+
+  function addTreeNode(parent, key, value, path, depth) {
+    if (treeNodes >= treeLimit) return;
+    treeNodes += 1;
+    const isBranch = value !== null && typeof value === 'object';
+    const children = isBranch
+      ? Array.isArray(value) ? value.map((child, index) => [String(index), child]) : Object.entries(value)
+      : [];
+    const node = document.createElement('div');
+    node.className = 'json-tree-node';
+    const row = document.createElement('div');
+    row.className = 'json-tree-row';
+    const toggle = document.createElement('button');
+    toggle.type = 'button';
+    toggle.className = 'json-tree-toggle';
+    toggle.textContent = isBranch ? depth === 0 ? '▾' : '▸' : '·';
+    toggle.disabled = !isBranch || depth >= treeDepthLimit;
+    toggle.setAttribute('aria-expanded', String(isBranch && depth === 0));
+    const select = document.createElement('button');
+    select.type = 'button';
+    select.className = 'json-tree-select';
+    select.dataset.path = path;
+    const type = value === null ? 'null' : Array.isArray(value) ? 'array' : typeof value;
+    select.dataset.search = `${key} ${path} ${type} ${isBranch ? '' : String(value)}`.toLowerCase();
+    const keyText = document.createElement('span');
+    keyText.className = 'json-tree-key';
+    keyText.textContent = key;
+    select.append(keyText);
+    const preview = document.createElement('span');
+    preview.className = 'json-tree-preview';
+    preview.textContent = isBranch ? `${type} · ${children.length} ${Array.isArray(value) ? 'items' : 'keys'}` : ': ';
+    select.append(preview);
+    if (!isBranch) {
+      const scalar = document.createElement('span');
+      scalar.className = 'json-tree-selected-value';
+      scalar.dataset.type = type;
+      scalar.textContent = typeof value === 'string' ? JSON.stringify(value) : String(value);
+      select.append(scalar);
+    }
+    row.append(toggle, select);
+    node.append(row);
+    if (isBranch) {
+      const nested = document.createElement('div');
+      nested.className = 'json-tree-list';
+      nested.hidden = depth !== 0;
+      if (depth < treeDepthLimit) {
+        for (const [childKey, child] of children) {
+          if (treeNodes >= treeLimit) break;
+          addTreeNode(nested, childKey, child, pathForChild(path, childKey, Array.isArray(value)), depth + 1);
+        }
+      } else if (children.length) {
+        nested.textContent = `Tree expansion stops at ${treeDepthLimit} levels.`;
+      }
+      node.append(nested);
+      toggle.addEventListener('click', () => {
+        nested.hidden = !nested.hidden;
+        toggle.textContent = nested.hidden ? '▸' : '▾';
+        toggle.setAttribute('aria-expanded', String(!nested.hidden));
+      });
+    }
+    select.addEventListener('click', () => {
+      tree.querySelectorAll('.json-tree-select[aria-current="true"]').forEach((old) => old.removeAttribute('aria-current'));
+      select.setAttribute('aria-current', 'true');
+      selectedValue = value;
+      selectedPath = path;
+      hasSelectedValue = true;
+      selectedPanel.hidden = false;
+      selectedPathLabel.textContent = path;
+      selectedTypeLabel.textContent = value === null ? 'null' : Array.isArray(value) ? `array · ${value.length} items` : typeof value;
+      copyPathButton.disabled = false;
+      copyValueButton.disabled = false;
+    });
+    parent.append(node);
+  }
+
+  function renderTree(value) {
+    tree.replaceChildren();
+    clearTreeSelection();
+    treeNodes = 0;
+    treeSearch.value = '';
+    const root = document.createElement('div');
+    root.className = 'json-tree-root';
+    addTreeNode(root, 'root', value, '$', 0);
+    tree.append(root);
+    if (treeNodes >= treeLimit) {
+      const note = document.createElement('p');
+      note.className = 'json-bench-empty';
+      note.textContent = `Tree limited to ${treeLimit.toLocaleString()} nodes for responsiveness.`;
+      tree.append(note);
+    }
+    disableTransformations(false);
+  }
+
+  function inspect() {
+    const source = input.value;
+    updateRepair(null);
+    parsed = undefined;
+    valid = false;
+    disableTransformations(true);
+    if (!source.trim()) {
+      validity.textContent = 'No input';
+      validity.dataset.state = 'invalid';
+      setDiagnostic('invalid', 'Add JSON to begin', 'Paste or type JSON in this editor. Nothing leaves this browser.');
+      statOutputs.forEach((element) => { element.textContent = element.dataset.jsonStat === 'size' ? byteSize(source) : '—'; });
+      tree.innerHTML = '<p class="json-bench-empty">Enter valid JSON to explore its structure.</p>';
+      clearOutput();
+      clearTreeSelection();
+      return;
+    }
+    try {
+      parsed = JSON.parse(source);
+      valid = true;
+      validity.textContent = 'Valid JSON';
+      validity.dataset.state = 'valid';
+      setDiagnostic('valid', 'Valid JSON', 'Syntax check passed. This does not validate field names or types against an API or schema.');
+      updateStats(parsed, source);
+      renderTree(parsed);
+      clearOutput('Choose Format, Minify, or a data operation to create output.');
+    } catch (error) {
+      const message = error instanceof Error ? error.message : 'The JSON parser rejected this input.';
+      const proposal = safeRepair(source);
+      const location = locationForError(message, source)
+        || (proposal ? locationAt(source, proposal.positions[0]) : '');
+      updateRepair(proposal);
+      validity.textContent = 'Needs attention';
+      validity.dataset.state = 'invalid';
+      setDiagnostic('invalid', 'JSON syntax error', proposal
+        ? `Parser: ${message}${location ? ` · ${location}` : ''}. Review the conservative repair proposal before applying it.`
+        : `Parser: ${message}${location ? ` · ${location}` : ''}. No unambiguous supported repair was found; edit the input and validate again.`);
+      statOutputs.forEach((element) => { element.textContent = element.dataset.jsonStat === 'size' ? byteSize(source) : '—'; });
+      tree.innerHTML = '<p class="json-bench-empty">Tree explorer is available after the input parses as valid JSON.</p>';
+      clearTreeSelection();
+      clearOutput('Fix or validate the input to create output.');
+    }
+  }
+
+  function selectTab(name) {
+    tabs.forEach((tab) => {
+      const active = tab.dataset.jsonTab === name;
+      tab.setAttribute('aria-selected', String(active));
+      tab.tabIndex = active ? 0 : -1;
+    });
+    views.forEach((view) => { view.hidden = view.dataset.jsonView !== name; });
+  }
+
+  function sortJson(value) {
+    const clone = (source) => Array.isArray(source) ? []
+      : source !== null && typeof source === 'object' ? Object.create(null) : source;
+    const root = clone(value);
+    const pending = [{ source: value, target: root }];
+    while (pending.length) {
+      const { source, target } = pending.pop();
+      const entries = Array.isArray(source)
+        ? source.map((child, index) => [index, child])
+        : source !== null && typeof source === 'object'
+          ? Object.keys(source).sort((a, b) => a.localeCompare(b)).map((key) => [key, source[key]])
+          : [];
+      entries.forEach(([key, child]) => {
+        const copied = clone(child);
+        if (Array.isArray(target)) target[key] = copied;
+        else Object.defineProperty(target, key, { value: copied, enumerable: true, configurable: true, writable: true });
+        if (child !== null && typeof child === 'object') pending.push({ source: child, target: copied });
+      });
+    }
+    return root;
+  }
+
+  function parseJsonPath(path) {
+    if (!path.startsWith('$')) throw new Error('A JSON path must start with $.');
+    const parts = [];
+    let cursor = 1;
+    while (cursor < path.length) {
+      if (path[cursor] === '.') {
+        const property = path.slice(cursor + 1).match(/^[A-Za-z_$][\w$]*/);
+        if (!property) throw new Error(`Expected a property name after position ${cursor}.`);
+        parts.push(property[0]);
+        cursor += property[0].length + 1;
+        continue;
+      }
+      if (path[cursor] !== '[') throw new Error(`Unexpected character at position ${cursor}.`);
+      let closing = cursor + 1;
+      let inString = false;
+      let escaped = false;
+      for (; closing < path.length; closing += 1) {
+        const character = path[closing];
+        if (inString) {
+          if (escaped) escaped = false;
+          else if (character === '\\') escaped = true;
+          else if (character === '"') inString = false;
+        } else if (character === '"') inString = true;
+        else if (character === ']') break;
+      }
+      if (closing >= path.length) throw new Error('A bracket is missing its closing ].');
+      const part = path.slice(cursor + 1, closing);
+      if (/^(0|[1-9]\d*)$/.test(part)) parts.push(Number(part));
+      else if (part.startsWith('"')) {
+        try {
+          const property = JSON.parse(part);
+          if (typeof property !== 'string') throw new Error('not a string');
+          parts.push(property);
+        } catch {
+          throw new Error('Use a valid JSON-quoted property name inside brackets.');
+        }
+      } else {
+        throw new Error('Use an array index or a JSON-quoted property name inside brackets.');
+      }
+      cursor = closing + 1;
+    }
+    return parts;
+  }
+
+  function extractPathValue(value, path) {
+    let current = value;
+    for (const part of parseJsonPath(path)) {
+      if (current === null || typeof current !== 'object' || !Object.prototype.hasOwnProperty.call(current, part)) {
+        throw new Error(`No value exists at ${path}.`);
+      }
+      current = current[part];
+    }
+    return current;
+  }
+
+  function toCsv(value) {
+    if (!Array.isArray(value) || value.length === 0 || !value.every((item) => item !== null && typeof item === 'object' && !Array.isArray(item))) {
+      throw new Error('CSV conversion needs a non-empty array of objects.');
+    }
+    const columns = [...new Set(value.flatMap((item) => Object.keys(item)))];
+    if (!columns.length) throw new Error('The objects do not contain any fields to export.');
+    const cell = (item) => {
+      const text = item === null || item === undefined ? '' : typeof item === 'object' ? JSON.stringify(item) : String(item);
+      return /[",\r\n]/.test(text) ? `"${text.replace(/"/g, '""')}"` : text;
+    };
+    return [columns, ...value.map((item) => columns.map((column) => item[column]))]
+      .map((row) => row.map(cell).join(','))
+      .join('\r\n');
+  }
+
+  function actionError(error) {
+    const message = error instanceof Error ? error.message : 'The operation could not be completed.';
+    status(message, 'error');
+    transformNote.textContent = message;
+  }
+
+  function copyText(text, successMessage) {
+    if (!navigator.clipboard || typeof navigator.clipboard.writeText !== 'function') {
+      status('Clipboard access is unavailable in this browser. Select the text and copy it manually.', 'error');
+      return;
+    }
+    const reportCopyError = (error) => {
+      console.error('Unable to copy JSON data:', error);
+      status('Clipboard access failed. Select the output and copy it manually.', 'error');
+    };
+    try {
+      navigator.clipboard.writeText(text).then(() => {
+        status(successMessage, 'success');
+      }).catch(reportCopyError);
+    } catch (error) {
+      reportCopyError(error);
+    }
+  }
+
+  function runAction(action) {
+    if (action === 'sample') {
+      input.value = sample;
+      syncEditor();
+      inspect();
+      status('Sample loaded. Review the safe trailing-comma proposal.', 'info');
+      return;
+    }
+    if (action === 'clear') {
+      if (input.value && !window.confirm('Clear the JSON input and current output?')) return;
+      input.value = '';
+      syncEditor();
+      inspect();
+      status('Input cleared.');
+      return;
+    }
+    if (action === 'copy') {
+      if (outputText) copyText(outputText, 'Output copied to the clipboard.');
+      return;
+    }
+    if (action === 'download') {
+      if (!outputText) return;
+      const extension = outputKind === 'csv' ? 'csv' : 'json';
+      const mimeType = outputKind === 'csv' ? 'text/csv;charset=utf-8' : 'application/json;charset=utf-8';
+      try {
+        const url = URL.createObjectURL(new Blob([outputText], { type: mimeType }));
+        const link = document.createElement('a');
+        link.href = url;
+        link.download = `json-repair-bench.${extension}`;
+        link.click();
+        window.setTimeout(() => URL.revokeObjectURL(url), 1000);
+        status(`Downloaded json-repair-bench.${extension}.`, 'success');
+      } catch (error) {
+        console.error('Unable to download JSON output:', error);
+        status('The browser could not prepare the download. Copy the output instead.', 'error');
+      }
+      return;
+    }
+    if (action === 'repair') {
+      inspect();
+      if (!repair) {
+        status('No safe automatic repair is available. The input was not changed.', 'error');
+        return;
+      }
+      selectTab('repair');
+      status('Review the proposed syntax repair before applying it.', 'success');
+      return;
+    }
+    if (action === 'validate') {
+      inspect();
+      status(valid ? 'JSON is syntactically valid.' : 'Validation failed. Review the diagnostic and edit the input.', valid ? 'success' : 'error');
+      return;
+    }
+    if (action === 'format' || action === 'minify') {
+      inspect();
+      if (!valid) {
+        status('Cannot format invalid JSON. Fix the syntax or review a safe repair first.', 'error');
+        return;
+      }
+      const indentation = indentSelect.value === 'tab' ? '\t' : Number(indentSelect.value);
+      try {
+        setOutput(JSON.stringify(parsed, null, action === 'format' ? indentation : undefined), 'json', action === 'format' ? 'Formatted JSON' : 'Minified JSON');
+        selectTab('output');
+      } catch (error) {
+        actionError(error);
+      }
+      return;
+    }
+    if (!valid) {
+      inspect();
+      status('This transformation needs valid JSON. Check the syntax diagnostic.', 'error');
+      return;
+    }
+    if (action === 'sort') {
+      try {
+        const indentation = indentSelect.value === 'tab' ? '\t' : Number(indentSelect.value);
+        setOutput(JSON.stringify(sortJson(parsed), null, indentation), 'json', 'Keys sorted for display · confirm order requirements before using');
+        transformNote.textContent = 'Object keys are sorted alphabetically in the output only. JSON objects are commonly treated as unordered; confirm requirements before relying on key order.';
+        selectTab('output');
+      } catch (error) {
+        actionError(error);
+      }
+    } else if (action === 'extract') {
+      try {
+        const path = pathInput.value.trim();
+        const value = extractPathValue(parsed, path);
+        const indentation = indentSelect.value === 'tab' ? '\t' : Number(indentSelect.value);
+        setOutput(JSON.stringify(value, null, indentation), 'json', `Extracted ${path}`);
+        selectTab('output');
+      } catch (error) {
+        actionError(error);
+      }
+    } else if (action === 'csv') {
+      try {
+        setOutput(toCsv(parsed), 'csv', 'CSV generated · nested cell values are JSON-encoded');
+        selectTab('output');
+      } catch (error) {
+        actionError(error);
+      }
+    }
+  }
+
+  input.addEventListener('input', () => {
+    syncEditor();
+    inspect();
+  });
+  input.addEventListener('scroll', syncEditor);
+  actionButtons.forEach((button) => {
+    button.addEventListener('click', () => {
+      if (button instanceof HTMLButtonElement && button.dataset.jsonAction) runAction(button.dataset.jsonAction);
+    });
+  });
+  tabs.forEach((tab, index) => {
+    tab.tabIndex = index === 0 ? 0 : -1;
+    tab.addEventListener('click', () => {
+      if (tab instanceof HTMLButtonElement && !tab.disabled && tab.dataset.jsonTab) selectTab(tab.dataset.jsonTab);
+    });
+    tab.addEventListener('keydown', (event) => {
+      if (event.key !== 'ArrowLeft' && event.key !== 'ArrowRight') return;
+      event.preventDefault();
+      let next = index;
+      do {
+        next = (next + (event.key === 'ArrowRight' ? 1 : -1) + tabs.length) % tabs.length;
+      } while (tabs[next].disabled && next !== index);
+      tabs[next].focus();
+      if (tabs[next].dataset.jsonTab) selectTab(tabs[next].dataset.jsonTab);
+    });
+  });
+  treeSearch.addEventListener('input', () => {
+    const query = treeSearch.value.trim().toLowerCase();
+    const rows = [...tree.querySelectorAll('.json-tree-select')];
+    rows.forEach((row) => {
+      const node = row.closest('.json-tree-node');
+      if (node instanceof HTMLElement) node.hidden = Boolean(query) && !row.dataset.search.includes(query);
+    });
+    if (query) {
+      rows.filter((row) => row.dataset.search.includes(query)).forEach((row) => {
+        let node = row.closest('.json-tree-node');
+        while (node instanceof HTMLElement) {
+          node.hidden = false;
+          const nested = node.querySelector(':scope > .json-tree-list');
+          if (nested instanceof HTMLElement) nested.hidden = false;
+          node = node.parentElement.closest('.json-tree-node');
+        }
+      });
+    }
+  });
+  treeExpandButton.addEventListener('click', () => {
+    tree.querySelectorAll('.json-tree-node > .json-tree-list').forEach((list) => { list.hidden = false; });
+    tree.querySelectorAll('.json-tree-toggle:not(:disabled)').forEach((button) => {
+      button.textContent = '▾';
+      button.setAttribute('aria-expanded', 'true');
+    });
+  });
+  treeCollapseButton.addEventListener('click', () => {
+    tree.querySelectorAll('.json-tree-node > .json-tree-list').forEach((list) => { list.hidden = true; });
+    tree.querySelectorAll('.json-tree-toggle:not(:disabled)').forEach((button) => {
+      button.textContent = '▸';
+      button.setAttribute('aria-expanded', 'false');
+    });
+  });
+  bench.querySelector('[data-json-apply-repair]')?.addEventListener('click', () => {
+    if (!repair) return;
+    input.value = repair.candidate;
+    syncEditor();
+    inspect();
+    if (!valid) {
+      status('The proposed repair did not pass validation; check the input before continuing.', 'error');
+      return;
+    }
+    try {
+      const indentation = indentSelect.value === 'tab' ? '\t' : Number(indentSelect.value);
+      setOutput(JSON.stringify(parsed, null, indentation), 'json', 'Repair applied and validated');
+      selectTab('output');
+    } catch (error) {
+      actionError(error);
+    }
+  });
+  copyPathButton.addEventListener('click', () => {
+    if (hasSelectedValue) copyText(selectedPath, 'JSON path copied.');
+  });
+  copyValueButton.addEventListener('click', () => {
+    if (!hasSelectedValue) return;
+    try {
+      const indentation = indentSelect.value === 'tab' ? '\t' : Number(indentSelect.value);
+      copyText(JSON.stringify(selectedValue, null, indentation), 'Selected JSON value copied.');
+    } catch (error) {
+      actionError(error);
+    }
+  });
+
+  input.value = sample;
+  syncEditor();
+  inspect();
+  status('Sample loaded. Review the safe trailing-comma proposal.', 'info');
+})();

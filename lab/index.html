@@ -12,9 +12,26 @@
     <ul class="nav-menu" id="primary-menu"><li><a href="/about/">About</a></li><li><a href="/projects/">Projects</a></li><li><a href="/journal/">Journal</a></li><li><a href="/lab/" aria-current="page">Lab</a></li><li><a href="/services/">Services</a></li><li><a class="nav-contact" href="/contact/">Let’s talk ↗</a></li></ul>
   </nav></header>
   <main id="main">
-    <section class="page-hero"><div class="container"><p class="breadcrumbs"><a href="/">Home</a> / Lab</p><p class="eyebrow">Experiments · Ideas in progress</p><h1>Curiosity, put to work.</h1><p class="lede">A collection of small tools, creative experiments, and ideas I’m exploring through code. Some solve everyday problems. Others exist to test what’s possible. All are built to be explored.</p></div></section>
-    <section class="section"><div class="container">
-      <div class="section-heading"><div><p class="eyebrow">Live · Interactive tool</p><h2>Color contrast checker</h2></div><p>Runs in your browser using the selected sRGB colors. No color values are sent anywhere.</p></div>
+    <section class="page-hero"><div class="container"><p class="breadcrumbs"><a href="/">Home</a> / Lab</p><p class="eyebrow">Interactive tools · Creative experiments</p><h1>Curiosity, put to work.</h1><p class="lede">Practical tools and playful experiments for design, data, writing, and code. Pick a starting point, explore at your own pace, and see what you can make.</p></div></section>
+    <section class="lab-tool-index" aria-labelledby="lab-tool-index-title">
+      <div class="container">
+        <div class="lab-tool-index-heading">
+          <div><p class="eyebrow">The Lab · 07 tools</p><h2 id="lab-tool-index-title">Choose a starting point.</h2></div>
+          <p>Each tool is a small invitation to test an idea, understand a system, or make something of your own.</p>
+        </div>
+        <ol class="lab-tool-index-list">
+          <li><a href="#color-contrast"><span class="lab-tool-index-meta"><span>01</span><span>Accessibility</span></span><strong>Color Contrast Checker</strong><span>Check whether text stands out clearly on its background.</span></a></li>
+          <li><a href="#atmosphere-title"><span class="lab-tool-index-meta"><span>02</span><span>Generative art</span></span><strong>Atmosphere Studio</strong><span>Make living artwork by shaping particles, paths, and motion.</span></a></li>
+          <li><a href="#type-intro-title"><span class="lab-tool-index-meta"><span>03</span><span>Typography</span></span><strong>Type in Motion</strong><span>Animate words and notice how spacing and timing change their feel.</span></a></li>
+          <li><a href="#request-inspector-title"><span class="lab-tool-index-meta"><span>04</span><span>APIs</span></span><strong>Request Inspector</strong><span>Send a test request, then inspect the response it gets back.</span></a></li>
+          <li><a href="#clarity-lab-title"><span class="lab-tool-index-meta"><span>05</span><span>Writing</span></span><strong>Clarity Lab</strong><span>Try simple ways to make a draft easier to read and scan.</span></a></li>
+          <li><a href="#signal-garden-title"><span class="lab-tool-index-meta"><span>06</span><span>Connected systems</span></span><strong>Signal Garden</strong><span>Explore how ideas connect and reshape a small network.</span></a></li>
+          <li><a href="#json-bench-title"><span class="lab-tool-index-meta"><span>07</span><span>Working with data</span></span><strong>JSON Repair Bench</strong><span>Validate, repair, explore, and transform JSON in your browser.</span></a></li>
+        </ol>
+      </div>
+    </section>
+    <section class="section" id="color-contrast" aria-labelledby="color-contrast-title"><div class="container">
+      <div class="section-heading"><div><p class="eyebrow">01 · Accessibility & color</p><h2 id="color-contrast-title">Color Contrast Checker</h2></div><p>Compare a text and background color against WCAG AA contrast targets. Adjust either color and preview the pairing before you use it.</p></div>
       <div class="tool-card">
         <div class="tool-fields">
           <div class="tool-field"><label for="foreground-hex">Text color</label><div class="tool-field-controls"><input id="foreground" type="color" value="#174b35" aria-label="Pick text color"><input class="tool-hex-input" id="foreground-hex" type="text" value="#174B35" maxlength="7" spellcheck="false" autocomplete="off" aria-label="Text color hex value" aria-describedby="foreground-hex-error"><span class="tool-field-error" id="foreground-hex-error" hidden>Enter a 6-digit hex value, such as #174B35.</span></div></div>
@@ -39,8 +56,8 @@
     <section class="section atmosphere-section" aria-labelledby="atmosphere-title">
       <div class="container">
         <div class="section-heading">
-          <div><p class="eyebrow">Live · Creative coding experiment</p><h2 id="atmosphere-title">Atmosphere Studio</h2></div>
-          <p>Make a living composition from motion, form, and a little unpredictability. Move your pointer through the canvas and see what happens.</p>
+          <div><p class="eyebrow">02 · Generative art</p><h2 id="atmosphere-title">Atmosphere Studio</h2></div>
+          <p>Create an animated artwork by shaping flowing lines, particles, and orbiting forms. Move through the canvas to influence the result.</p>
         </div>
         <div class="atmosphere-studio" data-atmosphere-studio>
           <div class="atmosphere-stage">
@@ -344,11 +361,111 @@
         </div>
       </div>
     </section>
+    <section class="section request-inspector-section" aria-labelledby="request-inspector-title">
+      <div class="container">
+        <div class="request-inspector-intro">
+          <div><p class="eyebrow">04 · API exploration</p><h2 id="request-inspector-title">Request Inspector</h2><p>Send it. Inspect it. Understand it.</p></div>
+          <div class="request-safety-note"><span aria-hidden="true">●</span><p>Requests are limited to JSONPlaceholder, a public testing API. Don’t enter credentials, private tokens, or sensitive data.</p></div>
+        </div>
+        <div class="request-workbench" data-request-inspector>
+          <section class="request-builder" aria-labelledby="request-builder-title">
+            <div class="request-panel-heading"><div><p class="request-step">01 / BUILD YOUR REQUEST</p><h3 id="request-builder-title">Request</h3></div><span class="request-draft-label">JSONPLACEHOLDER</span></div>
+            <div class="request-bar">
+              <label class="sr-only" for="request-method">HTTP method</label>
+              <select id="request-method" data-request-method><option>GET</option><option>POST</option></select>
+              <label class="sr-only" for="request-path">Request path</label>
+              <input id="request-path" data-request-path type="text" value="/posts/1" maxlength="160" spellcheck="false" autocomplete="off">
+              <button type="button" class="request-send-button" data-request-send><span aria-hidden="true">▶</span> Send request</button>
+            </div>
+            <p class="request-base-url"><span>BASE URL</span> https://jsonplaceholder.typicode.com <span data-request-full-url>/posts/1</span></p>
+            <div class="request-builder-options">
+              <div class="request-params-field">
+                <label for="request-params">Query parameters <small>one key=value per line</small></label>
+                <textarea id="request-params" data-request-params rows="2" placeholder="userId=1"></textarea>
+              </div>
+              <div class="request-headers-field">
+                <label for="request-headers">Request headers <small>one name: value per line</small></label>
+                <textarea id="request-headers" data-request-headers rows="2">Accept: application/json</textarea>
+              </div>
+            </div>
+            <div class="request-body-field" data-request-body-wrap hidden>
+              <label for="request-body">JSON body <small>POST requests are simulated by the testing API</small></label>
+              <textarea id="request-body" data-request-body rows="5" spellcheck="false">{
+  "title": "A small request",
+  "body": "Inspect what the server returns.",
+  "userId": 1
+}</textarea>
+            </div>
+            <p class="request-error" data-request-error role="alert" hidden></p>
+            <div class="request-builder-bottom">
+              <button type="button" data-request-compare-pin disabled>Pin response to compare</button>
+              <span>Browser Fetch API · 10 second timeout</span>
+            </div>
+          </section>
+          <section class="request-response" aria-labelledby="request-response-title">
+            <div class="request-panel-heading request-response-heading"><div><p class="request-step">02 / RESPONSE</p><h3 id="request-response-title">What came back?</h3></div><span class="request-status-badge" data-request-status>Not sent</span></div>
+            <div class="request-metrics">
+              <div><span>STATUS</span><strong data-request-status-value>—</strong><small data-request-status-text>Waiting for a request</small></div>
+              <div><span>DURATION</span><strong data-request-duration>—</strong><small>Measured in this browser</small></div>
+              <div><span>SIZE</span><strong data-request-size>—</strong><small>Response body bytes</small></div>
+            </div>
+            <div class="request-response-tabs" role="tablist" aria-label="Response views">
+              <button type="button" role="tab" data-response-tab="body" aria-selected="true">Body</button>
+              <button type="button" role="tab" data-response-tab="headers" aria-selected="false">Headers</button>
+              <button type="button" role="tab" data-response-tab="journey" aria-selected="false">Journey</button>
+              <button type="button" role="tab" data-response-tab="compare" aria-selected="false" disabled>Compare</button>
+              <button type="button" role="tab" data-response-tab="explain" aria-selected="false">Learn</button>
+            </div>
+            <div class="request-response-panel" data-response-panel="body" role="tabpanel">
+              <div class="request-body-toolbar"><span data-request-body-type>Response JSON</span><div><label class="sr-only" for="request-search">Search response</label><input id="request-search" data-request-search type="search" placeholder="Find in response"><button type="button" data-request-copy disabled>Copy JSON</button></div></div>
+              <div class="request-json-tree" data-request-json><p class="request-empty-state">Send a request to inspect its response body.</p></div>
+              <pre class="request-raw-json" data-request-raw hidden></pre>
+              <button class="request-raw-toggle" type="button" data-request-raw-toggle hidden>Show raw JSON</button>
+            </div>
+            <div class="request-response-panel" data-response-panel="headers" role="tabpanel" hidden>
+              <div data-request-response-headers><p class="request-empty-state">Readable response headers appear here after a request.</p></div>
+              <p class="request-small-note">Browsers expose only permitted response headers. CORS policy can hide other headers.</p>
+            </div>
+            <div class="request-response-panel" data-response-panel="journey" role="tabpanel" hidden>
+              <ol class="request-journey" data-request-journey><li data-journey-step="prepared" data-state="pending"><span>01</span><div><strong>Request prepared</strong><small>Method, path, parameters, and headers are checked.</small></div><time>—</time></li><li data-journey-step="sent" data-state="pending"><span>02</span><div><strong>Request sent</strong><small>The browser handed the request to Fetch.</small></div><time>—</time></li><li data-journey-step="headers" data-state="pending"><span>03</span><div><strong>Response headers received</strong><small>Fetch resolved with an HTTP status and readable headers.</small></div><time>—</time></li><li data-journey-step="body" data-state="pending"><span>04</span><div><strong>Response interpreted</strong><small>The body was read and JSON parsing was attempted.</small></div><time>—</time></li></ol>
+              <p class="request-small-note">The browser measures total elapsed time. DNS, connection setup, and server processing phases are not exposed here.</p>
+            </div>
+            <div class="request-response-panel" data-response-panel="compare" role="tabpanel" hidden>
+              <div data-request-comparison><p class="request-empty-state">Pin a response, then send another request to compare them.</p></div>
+            </div>
+            <div class="request-response-panel" data-response-panel="explain" role="tabpanel" hidden>
+              <div class="request-explanation" data-request-explanation><strong>Waiting for a real response</strong><p>After a request completes, this panel will explain the observed status and what it does—and does not—tell you.</p></div>
+            </div>
+            <p class="request-live-status" data-request-live-status aria-live="polite">Ready. Choose an example or edit the request path.</p>
+          </section>
+        </div>
+        <div class="request-experiments">
+          <section class="request-examples" aria-labelledby="request-examples-title">
+            <p class="request-step">START WITH AN EXAMPLE</p><h3 id="request-examples-title">Change one thing. See what changes.</h3>
+            <div class="request-example-list">
+              <button type="button" data-request-example="single"><span>GET</span><strong>One post</strong><code>/posts/1</code></button>
+              <button type="button" data-request-example="query"><span>GET</span><strong>Filter by user</strong><code>/posts · userId=1</code></button>
+              <button type="button" data-request-example="user"><span>GET</span><strong>A user record</strong><code>/users/1</code></button>
+              <button type="button" data-request-example="create"><span>POST</span><strong>Simulate creating a post</strong><code>/posts</code></button>
+              <button type="button" data-request-example="missing"><span>GET</span><strong>Find a missing post</strong><code>/posts/999999</code></button>
+            </div>
+          </section>
+          <aside class="request-challenge" aria-labelledby="request-challenge-title">
+            <p class="request-step">API FIELD NOTES · CHALLENGE 01 OF 01</p><h3 id="request-challenge-title">Find the missing record.</h3>
+            <p>Request a post that does not exist. Change the ID until the API returns a real post.</p>
+            <label for="request-challenge-id">Post ID</label><input id="request-challenge-id" data-request-challenge-id type="number" min="1" max="1000000" value="999999">
+            <button type="button" data-request-challenge-check>Check my request ↗</button>
+            <p data-request-challenge-result aria-live="polite">Completion depends on the response received from the API.</p>
+          </aside>
+        </div>
+        <p class="request-footnote">JSONPlaceholder is a public testing service: POST responses are simulated, not permanently stored. This playground does not accept credentials or send requests to other hosts. A network or CORS error means no readable response was available to the browser.</p>
+      </div>
+    </section>
     <section class="section clarity-lab-section" aria-labelledby="clarity-lab-title">
       <div class="container">
         <div class="section-heading">
-          <div><p class="eyebrow">Live · Browser prototype</p><h2 id="clarity-lab-title">Clarity Lab</h2></div>
-          <p>AI meets practical UX: a writing experiment that turns complicated text into something easier to understand.</p>
+          <div><p class="eyebrow">05 · Writing clarity</p><h2 id="clarity-lab-title">Clarity Lab</h2></div>
+          <p>Try a rule-based writing helper to simplify, summarize, or organize a draft. Suggestions are a starting point, so review them for context and meaning.</p>
         </div>
         <div class="clarity-shell" data-clarity-lab>
           <div class="clarity-banner">
@@ -410,12 +527,8 @@
     <section class="section signal-garden-section" aria-labelledby="signal-garden-title">
       <div class="container">
         <div class="section-heading">
-          <div><p class="eyebrow">Live · Interactive experiment</p><h2 id="signal-garden-title">Signal Garden</h2></div>
-          <p>A distinctive visual experiment in connected ideas. Explore the network, follow a thread, or make a connection of your own.</p>
-        </div>
-        <div class="garden-intro">
-          <p>An interactive network of connected ideas. Add nodes, draw connections, move points, and watch the system reorganize.</p>
-          <p>Signal Garden explores data visualization, graph logic, and interactive systems.</p>
+          <div><p class="eyebrow">06 · Connected systems</p><h2 id="signal-garden-title">Signal Garden</h2></div>
+          <p>Explore a network of connected ideas. Select a point, follow a thread, or add your own connections and watch the system reorganize.</p>
         </div>
         <div class="garden-layout" data-signal-garden>
           <div class="garden-stage">
@@ -485,22 +598,120 @@
         </div>
       </div>
     </section>
-    <section class="section section-tight" aria-label="Ideas in progress"><div class="container">
-      <div class="section-heading"><div><p class="eyebrow">Ideas in progress</p></div><p>These are explorations rather than finished tools. I’ll label future additions as Live, Prototype, or Exploration so it’s clear what you can try today.</p></div>
-      <div class="lab-idea-grid">
-        <article class="lab-idea">
-          <div class="lab-idea-heading"><span class="lab-status">Exploration</span></div>
-          <h3>Responsive Reality Check</h3><p>A practical way to compare how a page behaves across desktop, tablet, and mobile sizes.</p>
-          <details><summary>Interaction ideas</summary><p>Switch between viewport presets, compare dimensions, and check for overflow. Inspecting arbitrary URLs would need careful security safeguards, so this would start with safe, controlled previews.</p></details>
-        </article>
-        <article class="lab-idea">
-          <div class="lab-idea-heading"><span class="lab-status">Exploration</span></div>
-          <h3>JSON Repair Bench</h3><p>A small browser-based utility for making JSON easier to inspect and fix.</p>
-          <details><summary>Interaction ideas</summary><p>Format, minify, validate, and copy JSON, with clear error locations when something needs fixing. A study in JavaScript and developer-focused UX.</p></details>
-        </article>
+    <section class="section json-bench-section" aria-labelledby="json-bench-title">
+      <div class="container">
+        <div class="section-heading json-bench-heading">
+          <div><p class="eyebrow">07 · Working with data</p><h2 id="json-bench-title">JSON Repair Bench</h2></div>
+          <p>Format, validate, repair, and explore JSON in one place. Your data stays in this browser.</p>
+        </div>
+        <div class="json-bench" data-json-bench>
+          <div class="json-bench-topbar">
+            <div class="json-bench-brand"><span aria-hidden="true">{ }</span><div><strong>JSON Repair Bench</strong><small>LAB 07 · BROWSER-BASED</small></div></div>
+            <div class="json-bench-privacy"><span aria-hidden="true"></span> Your data stays in this browser</div>
+          </div>
+          <div class="json-bench-toolbar" role="group" aria-label="JSON actions">
+            <div class="json-bench-primary-actions">
+              <button type="button" data-json-action="format">Format</button>
+              <button type="button" data-json-action="minify">Minify</button>
+              <button type="button" data-json-action="validate">Validate</button>
+              <button type="button" class="json-repair-action" data-json-action="repair">Repair JSON</button>
+            </div>
+            <div class="json-bench-secondary-actions">
+              <label for="json-indent">Indent</label>
+              <select id="json-indent" data-json-indent aria-label="Output indentation">
+                <option value="2">2 spaces</option><option value="4">4 spaces</option><option value="tab">Tab</option>
+              </select>
+              <button type="button" data-json-action="sample">Load sample</button>
+              <button type="button" data-json-action="clear">Clear</button>
+            </div>
+          </div>
+          <div class="json-bench-layout">
+            <section class="json-pane json-input-pane" aria-labelledby="json-input-title">
+              <div class="json-pane-heading">
+                <div><span class="json-pane-kicker">01 / INPUT</span><h3 id="json-input-title">Your JSON</h3></div>
+                <span class="json-validation-badge" data-json-validity data-state="invalid">Needs attention</span>
+              </div>
+              <div class="json-editor" data-json-editor>
+                <div class="json-line-numbers" data-json-lines aria-hidden="true"></div>
+                <pre class="json-highlight" data-json-highlight aria-hidden="true"></pre>
+                <textarea id="json-input" data-json-input spellcheck="false" autocapitalize="off" autocomplete="off" autocorrect="off" aria-label="Editable JSON input" aria-describedby="json-input-help" maxlength="500000"></textarea>
+              </div>
+              <div class="json-editor-footer"><span id="json-input-help">Input is never uploaded. Large inputs use plain text for responsiveness; maximum 500,000 characters.</span><span data-json-input-stats>0 characters</span></div>
+              <div class="json-diagnostics" data-json-diagnostics role="status" aria-live="polite"></div>
+            </section>
+            <section class="json-pane json-output-pane" aria-labelledby="json-output-title">
+              <div class="json-pane-heading">
+                <div><span class="json-pane-kicker">02 / INSPECT</span><h3 id="json-output-title">Workbench output</h3></div>
+                <div class="json-output-actions">
+                  <button type="button" data-json-action="copy" disabled>Copy</button>
+                  <button type="button" data-json-action="download" disabled>Download</button>
+                </div>
+              </div>
+              <div class="json-output-tabs" role="tablist" aria-label="JSON output views">
+                <button type="button" id="json-tab-output" role="tab" data-json-tab="output" aria-controls="json-panel-output" aria-selected="true">Output</button>
+                <button type="button" id="json-tab-tree" role="tab" data-json-tab="tree" aria-controls="json-panel-tree" aria-selected="false">Tree explorer</button>
+                <button type="button" id="json-tab-repair" role="tab" data-json-tab="repair" aria-controls="json-panel-repair" aria-selected="false" disabled>Repair preview</button>
+              </div>
+              <div class="json-output-view" id="json-panel-output" data-json-view="output" role="tabpanel" aria-labelledby="json-tab-output">
+                <pre class="json-output-code" data-json-output><span class="json-output-placeholder">Formatted or transformed JSON will appear here.</span></pre>
+              </div>
+              <div class="json-output-view" id="json-panel-tree" data-json-view="tree" role="tabpanel" aria-labelledby="json-tab-tree" hidden>
+                <div class="json-tree-toolbar">
+                  <label class="sr-only" for="json-tree-search">Search JSON tree</label>
+                  <input id="json-tree-search" data-json-tree-search type="search" placeholder="Search keys and values">
+                  <button type="button" data-json-tree-expand disabled>Expand all</button>
+                  <button type="button" data-json-tree-collapse disabled>Collapse all</button>
+                </div>
+                <div class="json-tree" data-json-tree><p class="json-bench-empty">Validate JSON to explore its structure.</p></div>
+                <div class="json-selected-path" data-json-selected hidden>
+                  <div><span>SELECTED VALUE</span><code data-json-selected-path>—</code><small data-json-selected-type></small></div>
+                  <button type="button" data-json-copy-path disabled>Copy path</button>
+                  <button type="button" data-json-copy-value disabled>Copy value</button>
+                </div>
+              </div>
+              <div class="json-output-view" id="json-panel-repair" data-json-view="repair" role="tabpanel" aria-labelledby="json-tab-repair" hidden>
+                <div class="json-repair-summary" data-json-repair-summary></div>
+                <div class="json-repair-diff"><div><span>ORIGINAL</span><pre data-json-repair-original></pre></div><div><span>PROPOSED</span><pre data-json-repair-proposed></pre></div></div>
+                <p class="json-repair-note">Review every change. The input is replaced only when you choose to apply this proposal.</p>
+                <button type="button" class="json-apply-repair" data-json-apply-repair>Apply proposed repair</button>
+              </div>
+              <div class="json-output-footer"><span data-json-output-status aria-live="polite">Waiting for JSON</span><span data-json-output-size>—</span></div>
+            </section>
+          </div>
+          <div class="json-bench-lower">
+            <section class="json-stats" aria-label="JSON structure statistics">
+              <div><span>OBJECT KEYS</span><strong data-json-stat="keys">—</strong></div>
+              <div><span>ARRAYS</span><strong data-json-stat="arrays">—</strong></div>
+              <div><span>MAX DEPTH</span><strong data-json-stat="depth">—</strong></div>
+              <div><span>INPUT SIZE</span><strong data-json-stat="size">—</strong></div>
+            </section>
+            <section class="json-transform-panel" aria-labelledby="json-transform-title">
+              <div><span class="json-pane-kicker">03 / TRANSFORM</span><h3 id="json-transform-title">Work with the data</h3></div>
+              <div class="json-transform-controls">
+                <button type="button" data-json-action="sort" disabled>Sort object keys</button>
+                <label for="json-path-input">Extract JSON path</label>
+                <input id="json-path-input" data-json-path type="text" placeholder="$.profile.email" spellcheck="false">
+                <button type="button" data-json-action="extract" disabled>Extract</button>
+                <button type="button" data-json-action="csv" disabled>Convert array to CSV</button>
+              </div>
+              <p data-json-transform-note>Sort changes display order only. JSON objects are commonly treated as unordered; confirm requirements before relying on key order.</p>
+              <p>CSV escaping protects delimiters and quotes, not spreadsheet formulas. Review untrusted cell values before opening a CSV in a spreadsheet.</p>
+            </section>
+          </div>
+          <p class="json-bench-footnote">All parsing and transformations happen locally in your browser. Repair suggestions are intentionally conservative; ambiguous syntax is reported, not guessed.</p>
+          <details class="json-learn">
+            <summary>Why strict JSON rejects these files—and when a repair is safe</summary>
+            <div class="json-learn-grid">
+              <p><strong>Strings and keys need double quotes.</strong> JSON is stricter than JavaScript object syntax, so single-quoted strings and unquoted property names are not valid JSON.</p>
+              <p><strong>Syntax is not a schema.</strong> Valid JSON does not confirm that an API or application will accept its field names, value types, or structure.</p>
+              <p><strong>Commas separate items; they do not finish them.</strong> A comma immediately before a closing bracket or brace is invalid. This bench can identify and remove that exact comma.</p>
+              <p><strong>Comments are not part of JSON.</strong> Line and block comments can be removed outside strings. Text such as <code>https://</code> inside a quoted value is preserved.</p>
+              <p><strong>Some mistakes need a human.</strong> Missing values or ambiguous separators are not guessed. Every proposed repair is parsed again and shown for review before it can replace the input.</p>
+            </div>
+          </details>
+        </div>
       </div>
-      <p class="case-note" style="margin-top:24px">Exploration means an idea, not a working tool.</p>
-    </div></section>
+    </section>
   </main>
   <footer class="site-footer"><div class="container footer-inner"><a class="wordmark" href="/" style="color:white"><span class="wordmark-mark" style="background:var(--lime);color:var(--ink)">V</span> VALERE MBAYA</a><div class="footer-nav"><a href="/projects/">Projects</a><a href="/journal/">Journal</a><a href="/services/">Services</a><a href="/contact/">Contact</a></div><p>© <span data-year>2026</span> Valere Mbaya · Nairobi, Kenya</p></div></footer>
 </body>
